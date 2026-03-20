@@ -1,0 +1,318 @@
+{
+  "menu": [
+    {
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline-outline",
+      "url": "/dashboards",
+      "slug": "dashboards"
+    },
+    {
+      "name": "Branch Management",
+      "icon": "menu-icon tf-icons mdi mdi-sitemap-outline",
+      "slug": "branch",
+      "submenu": [
+        {
+          "url": "/branch",
+          "name": "Manage Branch",
+          "slug": "branch-management-branch"
+        }
+      ]
+    },
+    {
+      "name": "Lead Management",
+      "icon": "menu-icon tf-icons mdi mdi-network-pos",
+      "slug": "sales",
+      "submenu": [
+        {
+          "url": "/sales/manage_lead",
+          "name": "Manage Lead",
+          "slug": "sales-manage-lead"
+        },
+        {
+          "url": "/manage_requirements",
+          "name": "Manage Requirments",
+          "slug": "sales-manage-requirments"
+        }
+      ]
+    },
+    {
+      "name": "Lead Management",
+      "icon": "menu-icon tf-icons mdi mdi-invoice-text-multiple-outline",
+      "slug": "quotation",
+      "submenu": [
+        {
+          "url": "/manage_proposal",
+          "name": "Manage Proposal",
+          "slug": "quotation-manage-quotation"
+        },
+        {
+          "url": "/quotation/manage_invoice",
+          "name": "Manage Invoice",
+          "slug": "quotation-manage-invoice"
+        },
+        {
+          "url": "/manage_nda",
+          "name": "Manage NDA",
+          "slug": "quotation-manage-nda"
+        }
+      ]
+    },
+    {
+      "name": "Client Management",
+      "icon": "menu-icon tf-icons mdi mdi-account-outline",
+      "slug": "Client",
+      "submenu": [
+        {
+          "url": "/manage_client",
+          "name": "Manage Client",
+          "slug": "Client-manage-Client"
+        }
+      ]
+    },
+    {
+      "name": "Service Management",
+      "icon": "menu-icon tf-icons mdi mdi-book-open-page-variant-outline",
+      "slug": "service",
+      "submenu": [
+        {
+          "url": "/services/manage_product",
+          "name": "Manage Services",
+          "slug": "service-manage-service"
+        },
+        {
+          "url": "/services/manage_packages",
+          "name": "Manage Packages",
+          "slug": "service-manage-package"
+        },
+        {
+          "url": "/services/manage_add_on",
+          "name": "Manage Add-On-Services",
+          "slug": "service-manage-add-on"
+        }
+      ]
+    },
+    {
+      "name": "Production",
+      "icon": "menu-icon tf-icons mdi mdi-finance",
+      "slug": "production",
+      "submenu": [
+        {
+          "url": "/production/manage_sales",
+          "name": "Manage Sales",
+          "slug": "production-manage-sales"
+        },
+        {
+          "url": "/production/manage_cre",
+          "name": "Manage CRE",
+          "slug": "production-manage-cre"
+        },
+        {
+          "url": "/production/staff_board",
+          "name": "Manage PC",
+          "slug": "production-staff-board"
+        },
+        {
+          "url": "/production/manage_batch",
+          "name": "Manage Production",
+          "slug": "production-manage-batch"
+        },
+        {
+          "url": "/production/manage_costing",
+          "name": "Manage Costing",
+          "slug": "production-manage-costing"
+        },
+        {
+          "url": "/production/manage_staff_board",
+          "name": "Staff Board",
+          "slug": "production-manage-staff-board"
+        }
+      ]
+    },
+    {
+      "name": "Journal Management",
+      "icon": "menu-icon tf-icons mdi mdi-newspaper-variant-outline",
+      "slug": "journal",
+      "submenu": [
+        {
+          "url": "/journal/manage_booklet",
+          "name": "Journal Booklet",
+          "slug": "journal-journal-management"
+        },
+        {
+          "url": "/journal/journal_monitor",
+          "name": "Journal Monitor",
+          "slug": "journal-journal-monitor"
+        },
+        {
+          "url": "/journal/journal_executive",
+          "name": "Journal Executive",
+          "slug": "journal-journal-executive"
+        }
+      ]
+    },
+    {
+      "name": "Client Care",
+      "icon": "menu-icon tf-icons mdi mdi-face-agent",
+      "slug": "Client_care",
+      "submenu": [
+        {
+          "url": "app/user/list",
+          "name": "List",
+          "slug": "app-user-list"
+        },
+        {
+          "name": "View",
+          "slug": "app-user-view",
+          "submenu": [
+            {
+              "url": "#",
+              "name": "Account",
+              "slug": "app-user-view-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "HR Management",
+      "icon": "menu-icon tf-icons mdi mdi-account-group-outline",
+      "slug": "hr-management",
+      "submenu": [
+        {
+          "url": "/manage_staff",
+          "name": "Manage Staff",
+          "slug": "hr-management-staff"
+        },
+        {
+          "url": "/manage_staff_attendance",
+          "name": "Manage Attendance",
+          "slug": "hr-management-staff-attendance"
+        }
+      ]
+    },
+    {
+      "name": "Accounts Management",
+      "icon": "menu-icon tf-icons mdi mdi-cash-multiple",
+      "slug": "accounts",
+      "submenu": [
+        {
+          "url": "/accounts/daily_accounts",
+          "name": "Daily Accounts",
+          "slug": "accounts-daily-accounts"
+        },
+        {
+          "url": "/accounts/profit_loss",
+          "name": "Profit & Loss",
+          "slug": "accounts-profit-loss"
+        },
+        {
+          "url": "/accounts/trial_balance",
+          "name": "Trial Balance",
+          "slug": "accounts-trial-balance"
+        }
+      ]
+    },
+    {
+      "name": "Users Management",
+      "icon": "menu-icon tf-icons mdi mdi-target-account",
+      "slug": "users",
+      "submenu": [
+        {
+          "url": "/users/manage_users",
+          "name": "Manage Users",
+          "slug": "users-manage-users"
+        },
+        {
+          "url": "/users/user_role",
+          "name": "User Role",
+          "slug": "users-role"
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "icon": "menu-icon tf-icons mdi mdi-file-chart-outline",
+      "slug": "reports",
+      "submenu": [
+        {
+          "url": "app/user/list",
+          "name": "List",
+          "slug": "app-user-list"
+        },
+        {
+          "name": "View",
+          "slug": "app-user-view",
+          "submenu": [
+            {
+              "url": "#",
+              "name": "Account",
+              "slug": "app-user-view-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "icon": "menu-icon tf-icons mdi mdi-cogs",
+      "slug": "settings",
+      "submenu": [
+        {
+          "url": "settings/general_settings",
+          "name": "General Settings",
+          "slug": "settings-general-settings"
+        },
+        {
+          "url": "settings/common_settings",
+          "name": "Common",
+          "slug": "settings-common-settings"
+        },
+        {
+          "url": "/settings/marketing",
+          "name": "Marketing",
+          "slug": "settings-marketing-settings"
+        },
+        {
+          "url": "settings/branch",
+          "name": "Branch",
+          "slug": "settings-branch-settings"
+        },
+        {
+          "url": "/settings/lead",
+          "name": "Lead",
+          "slug": "settings-lead-settings"
+        },
+        {
+          "url": "/settings/quotation",
+          "name": "Quotation",
+          "slug": "settings-quotation-settings"
+        },
+        {
+          "url": "/settings/invoice",
+          "name": "Invoice",
+          "slug": "settings-invoice-settings"
+        },
+        {
+          "url": "/settings/services",
+          "name": "Services",
+          "slug": "settings-service-settings"
+        },
+        {
+          "url": "/settings/journal",
+          "name": "Journal",
+          "slug": "settings-journal-settings"
+        },
+        {
+          "url": "/settings/hrm",
+          "name": "HRM",
+          "slug": "settings-hrm-settings"
+        },
+        {
+          "url": "/settings/accounts",
+          "name": "Accounts",
+          "slug": "settings-accounts-settings"
+        }
+      ]
+    }
+  ]
+}

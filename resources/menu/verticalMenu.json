@@ -1,0 +1,91 @@
+{
+  "menu": [
+    {
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline",
+      "url": "/dashboards",
+      "slug": "dashboards"
+    },
+    {
+      "name": "Client Dashboard",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline",
+      "url": "/client_dashboard",
+      "slug" : "client-dashboard"
+    },
+    {
+      "name": "Manage Work Order",
+      "icon": "menu-icon tf-icons mdi mdi-list-box-outline",
+      "slug": "work-order",
+      "url": "/manage_work_order"
+    },
+    {
+      "name": "Manage Client",
+      "icon": "menu-icon tf-icons mdi mdi-account-outline",
+      "slug": "client",
+      "url": "/manage_client"
+    },
+    {
+      "name": "Manage Customer Asset",
+      "icon": "menu-icon tf-icons mdi mdi-pipe-valve",
+      "slug": "asset",
+      "url": "/manage_asset"
+    },
+    {
+      "name": "Tools & Equipments",
+      "icon": "menu-icon tf-icons mdi mdi-hammer-wrench",
+      "slug": "tool-equipment",
+      "url": "/manage_tools_equipments"          
+    },
+    {
+      "name": "Manage Procedure",
+      "icon": "menu-icon tf-icons mdi mdi-clipboard-list-outline",
+      "slug": "procedure",
+      "url": "/manage_procedure"
+    },
+    {
+      "name": "Manage Inventory",
+      "icon": "menu-icon tf-icons mdi mdi-warehouse",
+      "slug": "inventory",
+      "url": "/manage_inventory"
+    },
+    {
+      "name": "Manage Resources",
+      "icon": "menu-icon tf-icons mdi mdi-account-group-outline",
+      "slug": "resources",
+      "url": "/manage_resources"
+    },
+    {
+      "name": "Roles & Permissions",
+      "icon": "menu-icon tf-icons mdi mdi-target-account",
+      "slug": "role-permission",
+      "url": "/roles_permissions"
+    },
+    {
+      "name": "Settings",
+      "icon": "menu-icon tf-icons mdi mdi-cogs",
+      "slug": "settings",
+      "submenu": [
+        {
+          "url": "settings/general_settings",
+          "name": "General Settings",
+          "slug": "settings-general-settings"
+        },
+        {
+          "url": "settings/sector",
+          "name": "Sector",
+          "slug": "settings-sector"
+        },
+        {
+          "url": "settings/plant",
+          "name": "Plant",
+          "slug": "settings-plant"
+        },
+        {
+          "url": "settings/room",
+          "name": "Room",
+          "slug": "settings-room"
+        }
+      ]
+    }
+  ]
+}

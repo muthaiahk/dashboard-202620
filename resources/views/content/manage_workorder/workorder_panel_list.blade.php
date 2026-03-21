@@ -479,99 +479,32 @@
                         </tr>
                     </thead>
                     <tbody class="text-black fw-semibold fs-7">
+                        @foreach($workOrders as $order)
                         <tr>
                             <td>
                                 <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">13811979</label>
-                                    <label class="text-info fw-medium fs-8">PREV</label>
+                                    <label class="text-black fw-medium fs-7">{{ $order->id }}</label>
+                                    <label class="text-info fw-medium fs-8">{{ $order->order_type }}</label>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">Qatar Energy</label>
-                                    <label class="text-dark fw-medium fs-8">+974 4412 3456</label>
+                                    <label class="text-black fw-medium fs-7">{{ $order->client->company_name ?? 'N/A' }}</label>
+                                    <label class="text-dark fw-medium fs-8">{{ $order->client->mobile_no ?? '' }}</label>
                                 </div>
                             </td>
                             <td>
-                                <label class="text-black fw-medium fs-7">C - C-Med Potential Loss</label>
+                                <label class="text-black fw-medium fs-7">{{ $order->priority }} {{ $order->title ? '- '.$order->title : '' }}</label>
                             </td>
                             <td>
                                 <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">METC</label>
-                                    <label class="text-dark fw-medium fs-8">KUFA</label>
+                                    <label class="text-black fw-medium fs-7">{{ $order->asset->work_center ?? 'N/A' }}</label>
+                                    <label class="text-dark fw-medium fs-8">{{ $order->asset->plant->plant_name ?? '' }}</label>
                                 </div>
                             </td>
                             <td>
-                                <label class="text-black fw-medium fs-7 text-truncate max-w-150px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="SRV,VOL TANK 62-V-0009B,62-SRV-0009B,MEC
-                                    VALVE,RELIEF,REMOVE,5Y
-                                    VALVE,RELIEF,OVERHAUL,5Y
-                                    VALVE,RELIEF,TEST,5Y">
-                                    SRV,VOL TANK 62-V-0009B,62-SRV-0009B,MEC
-                                    VALVE,RELIEF,REMOVE,5Y
-                                    VALVE,RELIEF,OVERHAUL,5Y
-                                    VALVE,RELIEF,TEST,5Y
-                                </label>
-                            </td>
-                            <td>
-                                <ul class="list-unstyled users-list d-flex align-items-center avatar-group">
-                                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Sarah Connor" data-bs-original-title="Sarah Connor">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_2.png') }}" alt="Avatar">
-                                    </li>
-                                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Mohammed Fazil" data-bs-original-title="Mohammed Fazil">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_3.png') }}" alt="Avatar">
-                                    </li>
-                                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Andrew" data-bs-original-title="Andrew">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_1.png') }}" alt="Avatar">
-                                    </li>
-                                    <li class="avatar">
-                                        <span class="avatar-initial rounded-circle bg-primary pull-up text-white" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="3 more">+3</span>
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #4a154b;color: #4a154b;background-color: #4a154b12;">Preparation</label>
-                            </td>
-                            <td>
-                                <span class="text-end">
-                                    <a href="#" class="btn btn-icon btn-sm me-2">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="View">
-                                            <i class="mdi mdi-eye fs-3 text-black"></i>
-                                        </span>
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">13811980</label>
-                                    <label class="text-info fw-medium fs-8">PREV</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">Qatar Gas</label>
-                                    <label class="text-dark fw-medium fs-8">+974 5512 3456</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7">A - High Pressure Valve Maintenance</label>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">QGPC</label>
-                                    <label class="text-dark fw-medium fs-8">RAS LAFAN</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7 text-truncate max-w-150px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="SRV,HP GAS LINE 22-V-1011A,22-SRV-1011A
-                                    VALVE,RELIEF,REMOVE,5Y
-                                    VALVE,RELIEF,OVERHAUL,5Y
-                                    VALVE,RELIEF,TEST,5Y">
-                                    SRV,HP GAS LINE 22-V-1011A,22-SRV-1011A
-                                    VALVE,RELIEF,REMOVE,5Y
-                                    VALVE,RELIEF,OVERHAUL,5Y
-                                    VALVE,RELIEF,TEST,5Y
+                                <label class="text-black fw-medium fs-7 text-truncate max-w-150px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ $order->description }}">
+                                    {{ $order->description ?? 'No Description' }}
                                 </label>
                             </td>
                             <td>
@@ -579,140 +512,27 @@
                                     <li class="avatar pull-up">
                                         <img class="rounded-circle" src="{{ asset('assets/images/auth/user_2.png') }}" alt="Avatar">
                                     </li>
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_3.png') }}" alt="Avatar">
-                                    </li>
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_1.png') }}" alt="Avatar">
-                                    </li>
                                 </ul>
                             </td>
                             <td>
-                                <label class="fw-medium fs-7 badge rounded"
-                                    style="border: 1px solid #f59e0b; color: #f59e0b; background-color: #f59e0b1a;">
-                                    Draft
-                                </label>
+                                <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #198754;color: #198754;background-color: #19875412;">{{ ucfirst($order->status) }}</label>
                             </td>
                             <td>
                                 <span class="text-end">
-                                    <a href="#" class="btn btn-icon btn-sm me-2">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="View">
+                                    <a href="#" class="btn btn-icon btn-sm me-2 view_work_order" data-id="{{ $order->id }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="View/Edit">
                                             <i class="mdi mdi-eye fs-3 text-black"></i>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="btn btn-icon btn-sm me-2 delete_work_order" data-id="{{ $order->id }}">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                            <i class="mdi mdi-trash-can-outline fs-3 text-danger"></i>
                                         </span>
                                     </a>
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">13811981</label>
-                                    <label class="text-info fw-medium fs-8">PREV</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">PM</label>
-                                    <label class="text-dark fw-medium fs-8">+974 7745 8899</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7">B - Pressure Relief Valve Overhaul</label>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">QP</label>
-                                    <label class="text-dark fw-medium fs-8">MESAIEED</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7 text-truncate max-w-150px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="SRV,CONDENSATE TANK 33-V-2050B,33-SRV-2050B
-                                    VALVE,RELIEF,REMOVE
-                                    VALVE,RELIEF,OVERHAUL
-                                    VALVE,RELIEF,CALIBRATE">
-                                    SRV,CONDENSATE TANK 33-V-2050B,33-SRV-2050B
-                                    VALVE,RELIEF,REMOVE
-                                    VALVE,RELIEF,OVERHAUL
-                                    VALVE,RELIEF,CALIBRATE
-                                </label>
-                            </td>
-                            <td>
-                                <ul class="list-unstyled users-list d-flex align-items-center avatar-group">
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_3.png') }}" alt="Avatar">
-                                    </li>
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_1.png') }}" alt="Avatar">
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #0d6efd;color: #0d6efd;background-color: #0d6efd12;">Execution</label>
-                            </td>
-                            <td>
-                                <span class="text-end">
-                                    <a href="#" class="btn btn-icon btn-sm me-2">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="View">
-                                            <i class="mdi mdi-eye fs-3 text-black"></i>
-                                        </span>
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">13811982</label>
-                                    <label class="text-info fw-medium fs-8">PREV</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">KUFA</label>
-                                    <label class="text-dark fw-medium fs-8">+974 4445 6789</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7">D - Safety Valve Inspection</label>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-start flex-column">
-                                    <label class="text-black fw-medium fs-7">NAKILAT</label>
-                                    <label class="text-dark fw-medium fs-8">DOHA PORT</label>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="text-black fw-medium fs-7 text-truncate max-w-150px" data-bs-toggle="tooltip" data-bs-placement="bottom" title="SRV,LPG STORAGE 51-V-3322A,51-SRV-3322A
-                                    VALVE,RELIEF,TEST
-                                    VALVE,RELIEF,INSPECTION">
-                                    SRV,LPG STORAGE 51-V-3322A,51-SRV-3322A
-                                    VALVE,RELIEF,TEST
-                                    VALVE,RELIEF,INSPECTION
-                                </label>
-                            </td>
-                            <td>
-                                <ul class="list-unstyled users-list d-flex align-items-center avatar-group">
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_1.png') }}" alt="Avatar">
-                                    </li>
-                                    <li class="avatar pull-up">
-                                        <img class="rounded-circle" src="{{ asset('assets/images/auth/user_2.png') }}" alt="Avatar">
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #198754;color: #198754;background-color: #19875412;">Completed</label>
-                            </td>
-                            <td>
-                                <span class="text-end">
-                                    <a href="#" class="btn btn-icon btn-sm me-2">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="View">
-                                            <i class="mdi mdi-eye fs-3 text-black"></i>
-                                        </span>
-                                    </a>
-                                </span>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -738,72 +558,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="asset-row active">
+                            @foreach($workOrders as $order)
+                            <tr class="asset-row" data-id="{{ $order->id }}">
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-semibold text-black">13629092</span>
-                                        <span class="text-dark fw-medium fs-8">11-SRV-1</span>
-                                        <span class="fw-bold text-danger">C</span>
+                                        <span class="fw-semibold text-black">{{ $order->id }}</span>
+                                        <span class="text-dark fw-medium fs-8">{{ $order->asset->tag_number ?? $order->asset->name ?? 'N/A' }}</span>
+                                        <span class="fw-bold text-danger">{{ $order->priority }}</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-black fw-medium fs-7">Qatar Energy</span>
+                                    <span class="text-black fw-medium fs-7">{{ $order->client->company_name ?? 'N/A' }}</span>
                                 </td>
                                 <td>
                                     <label class="fw-medium fs-7 badge rounded"
                                         style="border: 1px solid #f59e0b; color: #f59e0b; background-color: #f59e0b1a;">
-                                        Draft
+                                        {{ ucfirst($order->status) }}
                                     </label>
                                 </td>
                             </tr>
-                            <tr class="asset-row">
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-semibold text-black">13630684</span>
-                                        <span class="text-dark fw-medium fs-8">14-SRV-4601-03</span>
-                                        <span class="fw-bold text-danger">C</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-black fw-medium fs-7">Qatar Gas</span>
-                                </td>
-                                <td>
-                                    <label class="fw-medium fs-7 badge rounded"
-                                        style="border: 1px solid #f59e0b; color: #f59e0b; background-color: #f59e0b1a;">
-                                        Draft
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr class="asset-row">
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-semibold text-black">13329204</span>
-                                        <span class="text-dark fw-medium fs-8">12-SRV-4019-101</span>
-                                        <span class="fw-bold text-danger">C</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-black fw-medium fs-7">Oryx GTL</span>
-                                </td>
-                                <td>
-                                    <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #198754;color: #198754;background-color: #19875412;">Completed</label>
-                                </td>
-                            </tr>
-                            <tr class="asset-row">
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-semibold text-black">13329205</span>
-                                        <span class="text-dark fw-medium fs-8">12-SRV-4019-102</span>
-                                        <span class="fw-bold text-danger">C</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-black fw-medium fs-7">Qatar Energy</span>
-                                </td>
-                                <td>
-                                    <label class="fw-medium fs-7 badge rounded" style="border: 1px solid #198754;color: #198754;background-color: #19875412;">Completed</label>
-                                </td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -812,11 +586,11 @@
                 <div class="detail-header">
                     <div class="detail-desc">
                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                            <h4 class="my-0 py-0">11-SRV-1</h4>
-                            <span class="badge bg-gray-100 border text-black rounded fs-7 fw-medium">13629092</span>
-                            <span class="badge bg-label-primary border border-primary text-black rounded fs-7 fw-medium">Priority: C - C-Med Potential Loss</span>
+                            <h4 class="my-0 py-0" id="detail_asset_tag">--</h4>
+                            <span class="badge bg-gray-100 border text-black rounded fs-7 fw-medium" id="detail_wo_id">--</span>
+                            <span class="badge bg-label-primary border border-primary text-black rounded fs-7 fw-medium" id="detail_priority">Priority: --</span>
                         </div>
-                        <span class="text-dark fw-semibold fs-7">VALVE, BSTL I/L, SCRB V-1106,11-SRV-1, MEC</span>
+                        <span class="text-dark fw-semibold fs-7" id="detail_desc">--</span>
                     </div>
                     <div class="detail-desc">
                         <div class="mb-3">
@@ -877,8 +651,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="wizard-content p-2">
-                        <div class="wizard-panel active">
+                    <form id="wizardForm">
+                        <input type="hidden" name="work_order_id" id="wizard_work_order_id">
+                        <div class="wizard-content p-2">
+                            <div class="wizard-panel active">
                             <div class="card border mx-3 mb-3 bg-gray-100 rounded">
                                 <div class="card-header pb-0 d-flex align-items-center justify-content-between gap-5">
                                     <h6 class="mb-0 fw-semibold">
@@ -889,31 +665,31 @@
                                     <div class="row mb-3">
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Site Condition Notes</label>
-                                            <textarea class="form-control" rows="1" placeholder="Enter Site Condition Notes"></textarea>
+                                            <textarea class="form-control" name="site_condition_notes" rows="1" placeholder="Enter Site Condition Notes"></textarea>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Obstruction Notes</label>
-                                            <textarea class="form-control" rows="1" placeholder="Enter Obstruction Notes"></textarea>
+                                            <textarea class="form-control" name="obstruction_notes" rows="1" placeholder="Enter Obstruction Notes"></textarea>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Special Tools Required</label>
-                                            <input type="text" class="form-control" placeholder="Enter Special Tools Required" />
+                                            <input type="text" class="form-control" name="special_tools_required" placeholder="Enter Special Tools Required" />
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Access Issues</label>
-                                            <textarea class="form-control" rows="1" placeholder="Enter Access Issues"></textarea>
+                                            <textarea class="form-control" name="access_issues" rows="1" placeholder="Enter Access Issues"></textarea>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Safety Concerns</label>
-                                            <textarea class="form-control" rows="1" placeholder="Enter Safety Concerns"></textarea>
+                                            <textarea class="form-control" name="safety_concerns" rows="1" placeholder="Enter Safety Concerns"></textarea>
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Permit Number</label>
-                                            <input type="text" class="form-control" placeholder="Enter Permit Number" />
+                                            <input type="text" class="form-control" name="permit_number" placeholder="Enter Permit Number" />
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Permit Transferred By</label>
-                                            <select class="form-select select3 assign_team">
+                                            <select class="form-select select3 assign_team" name="permit_transferred_by">
                                                 <option value="">Select Staff</option>
                                                 <option value="1">Michael Brown</option>
                                                 <option value="2">Mike</option>
@@ -923,15 +699,15 @@
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Staff Mobile No</label>
-                                            <input type="text" class="form-control" placeholder="Enter Staff Mobile No" />
+                                            <input type="text" class="form-control" name="staff_mobile_no" placeholder="Enter Staff Mobile No" />
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Staff Email Id</label>
-                                            <input type="text" class="form-control" placeholder="Enter Staff Email Id" />
+                                            <input type="text" class="form-control" name="staff_email_id" placeholder="Enter Staff Email Id" />
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Assign Team<span class="text-danger">*</span></label>
-                                            <select class="form-select select3 assign_team">
+                                            <select class="form-select select3 assign_team" name="assign_team">
                                                 <option value="">Select Team</option>
                                                 <option value="1">Team A</option>
                                                 <option value="2">Team B</option>
@@ -1004,7 +780,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="tbt_100_percent_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">ToolBox Talks (TBT) 100%</label>
                                             </div>
@@ -1014,7 +790,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="assigned_members_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Assigned Members</label>
                                             </div>
@@ -1068,7 +844,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="obstruction_notes_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Obstruction Notes</label>
                                             </div>
@@ -1083,7 +859,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="special_tools_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Special Tools Required</label>
                                             </div>
@@ -1098,7 +874,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="access_issues_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Access Issues</label>
                                             </div>
@@ -1113,7 +889,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="safety_concerns_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Safety Concerns</label>
                                             </div>
@@ -1128,7 +904,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="site_condition_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Site Condition Notes</label>
                                             </div>
@@ -1143,7 +919,7 @@
                                 <div class="col-lg-12 mb-1">
                                     <div class="card border rounded p-4 mb-2">
                                         <div class="d-flex align-items-center justify-content-start gap-2 mb-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="documents_permits_checked"/>
                                             <div class="d-flex flex-column">
                                                 <label class="fw-medium text-black fs-7">Documents  & Permits</label>
                                             </div>
@@ -1287,7 +1063,7 @@
                                         <div class="col-lg-12">
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_ptw_approved"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">PTW (Permit To Work) Approved & Signed</label>
                                                     </div>
@@ -1295,7 +1071,7 @@
                                             </div>
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_gate_pass_valid"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">Gate Pass & Access Control Valid</label>
                                                     </div>
@@ -1303,7 +1079,7 @@
                                             </div>
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_weather_verified"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">Weathers Conditions Verified (No High Wind/Rain)</label>
                                                     </div>
@@ -1311,7 +1087,7 @@
                                             </div>
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_equipment_readiness"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">Equipment & Lifting Gear Readiness Verified</label>
                                                         <label>
@@ -1322,7 +1098,7 @@
                                             </div>
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_team_certs_valid"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">Team Certifications & Competency Valid</label>
                                                     </div>
@@ -1330,7 +1106,7 @@
                                             </div>
                                             <div class="card border rounded p-4 mb-2">
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_loto_applied"/>
                                                     <div class="d-flex flex-column">
                                                         <label class="fw-medium text-black fs-7">LOTO (Log Out /Tag Out) Applied</label>
                                                     </div>
@@ -1341,11 +1117,11 @@
                                             <div class="d-flex align-items-center justify-content-between gap-5 mb-2">
                                                 <label class="text-black fs-7 fw-semibold">Tehnical Notes</label>
                                                 <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="escalate_prep"/>
                                                     <label class="fw-semibold text-black fs-7">Escalate</label>
                                                 </div>
                                             </div>
-                                            <textarea class="form-control" rows="5" placeholder="Enter Tehnical Notes"></textarea>
+                                            <textarea class="form-control" name="tech_notes_prep" rows="5" placeholder="Enter Tehnical Notes"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -1357,11 +1133,11 @@
                                     <div class="d-flex align-items-center justify-content-between gap-5 mb-2">
                                         <label class="text-black fs-7 fw-semibold">Tehnical Notes</label>
                                         <div class="d-flex align-items-center justify-content-start gap-2">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="escalate_approval"/>
                                             <label class="fw-semibold text-black fs-7">Escalate</label>
                                         </div>
                                     </div>
-                                    <textarea class="form-control" rows="5" placeholder="Enter Tehnical Notes"></textarea>
+                                    <textarea class="form-control" name="tech_notes_approval" rows="5" placeholder="Enter Tehnical Notes"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1373,31 +1149,31 @@
                                             <span class="text-dark fw-bold fs-6">4. Safety Precautions</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_safety_loto"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Ensure lockout/tagout (LOTO) of the valve and connected system.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_safety_depressurized"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Confirm that the system is depressurized and drained.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_safety_lifting"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Use proper lifting techniques and tools for heavy valves.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_safety_ventilation"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Maintain proper ventilation for solvent cleaning.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_safety_ppe"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Use PPE at all times.
                                             </span>
@@ -1410,25 +1186,25 @@
                                             <span class="text-dark fw-semibold fs-6">5.1 Pre-Repair Inspection</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_verify"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Verify valve type, size, and identification tag.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_check"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Check prior maintenance records for recurring issues.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_inspect"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Visually inspect for leaks, corrosion, cracks, and physical damage.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_document"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Document the condition with photos and notes.
                                             </span>
@@ -1437,25 +1213,25 @@
                                             <span class="text-dark fw-semibold fs-6">5.2 Valve Isolation & Preparation</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_isolate"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Isolate the valve from the process line.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_depressurize"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Depressurize and drain any residual fluid.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_clean"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Clean the valve exterior to prevent contamination during repair.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_prepare"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Prepare tools, spare parts, and work area.
                                             </span>
@@ -1464,25 +1240,25 @@
                                             <span class="text-dark fw-semibold fs-6">5.3 Disassembly</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_loosen"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Loosen and remove bolts, nuts, and fasteners carefully.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_remove"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Remove valve bonnet, stem, disc, and other components systematically.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_organize"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Keep parts organized and labeled for reassembly.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_inspect"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Inspect components for wear, corrosion, or damage.
                                             </span>
@@ -1491,25 +1267,25 @@
                                             <span class="text-dark fw-semibold fs-6">5.4 Component Cleaning & Repair</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_solvents"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Clean all parts using appropriate solvents.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_grind"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Grind or lap valve seats and discs if required.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_replace"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Replace worn or damaged seals, gaskets, stems, or other components.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_lubricate"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Lubricate moving parts with recommended industrial lubricants.
                                             </span>
@@ -1518,19 +1294,19 @@
                                             <span class="text-dark fw-semibold fs-6">5.5 Reassembly</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_reverse"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Reassemble components in reverse order of disassembly.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_torque"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Apply recommended torque on bolts using a calibrated torque wrench.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_align"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Ensure proper alignment and sealing of moving parts.
                                             </span>
@@ -1539,19 +1315,19 @@
                                             <span class="text-dark fw-semibold fs-6">5.6 Testing & Quality Check</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_test_pressure"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Perform pressure testing according to valve specification (hydraulic/pneumatic).
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_test_leaks"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Check for leaks, proper movement, and operational integrity.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_test_record"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Record test results and validate against manufacturer standards.
                                             </span>
@@ -1560,25 +1336,25 @@
                                             <span class="text-dark fw-semibold fs-6">5.7 Reinstallation</span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reinstall_reinstall"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Reinstall valve into the system, ensuring alignment with pipeline.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reinstall_remove_loto"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Remove lockout/tagout after confirming safety.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reinstall_pressurize"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Gradually pressurize the system and check for leaks.
                                             </span>
                                         </div>
                                         <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox"/>
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reinstall_update_records"/>
                                             <span class="text-black fw-medium fs-6">
                                                 Update maintenance records and log repair details.
                                             </span>
@@ -1587,7 +1363,7 @@
                                 </div>
                                 <div class="col-lg-12 mb-2">
                                     <label class="text-black mb-1 fs-7 fw-semibold">Remarks</label>
-                                    <textarea class="form-control" rows="1" placeholder="Enter Remarks"></textarea>
+                                    <textarea class="form-control" name="exec_remarks" rows="1" placeholder="Enter Remarks"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1596,7 +1372,7 @@
                                 <div class="col-lg-12 mb-3">
                                     <label class="fw-semibold text-black fs-7 mb-2">Before Image</label>
                                     <div class="modern-dropzone" id="beforeDropzone">
-                                        <input type="file" class="file-input" multiple hidden>
+                                        <input type="file" class="file-input" name="before_images[]" multiple hidden>
                                         <div class="upload-area">
                                             <i class="mdi mdi-cloud-upload-outline fs-1 upload-icon"></i>
                                             <p class="upload-text">Drag & drop files or <span>Browse</span></p>
@@ -1607,7 +1383,7 @@
                                 <div class="col-lg-12 mb-3">
                                     <label class="fw-semibold text-black fs-7 mb-2">During Image</label>
                                     <div class="modern-dropzone" id="duringDropzone">
-                                        <input type="file" class="file-input" multiple hidden>
+                                        <input type="file" class="file-input" name="during_images[]" multiple hidden>
                                         <div class="upload-area">
                                             <i class="mdi mdi-cloud-upload-outline fs-1 upload-icon"></i>
                                             <p class="upload-text">Drag & drop files or <span>Browse</span></p>
@@ -1618,7 +1394,7 @@
                                 <div class="col-lg-12 mb-3">
                                     <label class="fw-semibold text-black fs-7 mb-2">After Image</label>
                                     <div class="modern-dropzone" id="afterDropzone">
-                                        <input type="file" class="file-input" multiple hidden>
+                                        <input type="file" class="file-input" name="after_images[]" multiple hidden>
                                         <div class="upload-area">
                                             <i class="mdi mdi-cloud-upload-outline fs-1 upload-icon"></i>
                                             <p class="upload-text">Drag & drop files or <span>Browse</span></p>
@@ -1649,7 +1425,7 @@
                                 <div class="col-lg-6">
                                     <label class="text-black mb-1 fs-6 fw-semibold">Final Status<span class="text-danger">*</span></label>
                                     <div class="d-block">
-                                        <button class="btn btn-success btn-sm">Submit / Close</button>
+                                        <button type="button" id="submitWizard" class="btn btn-success btn-sm">Submit / Close</button>
                                     </div>
                                 </div>
                             </div>
@@ -1664,6 +1440,7 @@
                             </button>
                         </div>
                     </div>
+                </form>
                 </div>
             </div>
         </div>
@@ -1882,103 +1659,77 @@
         </div>
         <!--end::Modal header-->
         <!--begin::Modal body-->
+        <form id="addWorkOrderForm">
+        @csrf
         <div class="modal-body py-5 px-10 px-xl-20">
             <div class="row scroll-y" style="max-height: 650px;">
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Client<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="client_id" required>
                         <option value="">Select Client</option>
-                        <option value="1">Qatar Energy</option>
-                        <option value="2">Qatar Gas</option>
-                        <option value="3">Oryx GTL</option>
+                        @foreach($clients as $val)
+                            <option value="{{ $val->id }}">{{ $val->company_name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Asset<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="asset_id" required>
                         <option value="">Select Asset</option>
-                        <option value="1">11-SRV-1</option>
-                        <option value="2">AST-GV-032</option>
-                        <option value="3">AST-CV-017</option>
-                        <option value="4">AST-SRV-027</option>
+                        @foreach($assets as $val)
+                            <option value="{{ $val->id }}">{{ $val->tag_number ?? $val->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Procedure<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="procedure_id" required>
                         <option value="">Select Procedure</option>
-                        <option value="1">Standard SRV Removal & Transport</option>
-                        <option value="2">SRV bench Testing & Calibration</option>
+                         @foreach($procedures as $val)
+                            <option value="{{ $val->id }}">{{ $val->title }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Order Title</label>
-                    <input type="text" class="form-control" placeholder="Enter Order Title" />
+                    <input type="text" class="form-control" name="title" placeholder="Enter Order Title" />
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Description</label>
-                    <textarea class="form-control" rows="1" placeholder="Enter Description"></textarea>
+                    <textarea class="form-control" name="description" rows="1" placeholder="Enter Description"></textarea>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-2 fs-7 fw-semibold">Assign Tools & Equipments</label>
                     <div class="row border p-3 g-2 rounded scroll-y max-h-250px">
+                        @foreach($tools as $tool)
                         <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
                             <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
+                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="tools[]" value="{{ $tool->id }}" />
                                 <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">50T Mobile Crane</label>
-                                    <label class="fw-medium text-dark fs-7">CR-SD-220-X</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Hydraulic Torque Wrench Kit</label>
-                                    <label class="fw-medium text-dark fs-7">HTW-004-A</label>
+                                    <label class="fw-medium text-black fs-7">{{ $tool->name }}</label>
+                                    <label class="fw-medium text-dark fs-7">{{ $tool->serial_number ?? $tool->type }}</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Grinding Machine</label>
-                                    <label class="fw-medium text-dark fs-7">GM-154-S</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Valve Testing Bench</label>
-                                    <label class="fw-medium text-dark fs-7">VTB-097-A</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Order Type<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="order_type" required>
                         <option value="">Select Order Type</option>
-                        <option value="1">Maintanence</option>
-                        <option value="2">Repair</option>
-                        <option value="3">Inspection</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Repair">Repair</option>
+                        <option value="Inspection">Inspection</option>
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Priority<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="priority" required>
                         <option value="">Select Priority</option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                        <option value="3">C</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -1987,7 +1738,7 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="compliance_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -1996,7 +1747,7 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="assigned_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -2005,90 +1756,92 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="tentative_removal_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">ABC Ind.</label>
-                    <input type="text" class="form-control" placeholder="Enter ABC Ind." />
+                    <input type="text" class="form-control" name="abc_ind" placeholder="Enter ABC Ind." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Scheudling Grp</label>
-                    <input type="text" class="form-control" placeholder="Enter Scheudling Grp" />
+                    <input type="text" class="form-control" name="scheduling_grp" placeholder="Enter Scheudling Grp" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Haz Area</label>
-                    <input type="text" class="form-control" placeholder="Enter Haz Area" />
+                    <input type="text" class="form-control" name="haz_area" placeholder="Enter Haz Area" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Act Type</label>
-                    <input type="text" class="form-control" placeholder="Enter Act Type" />
+                    <input type="text" class="form-control" name="act_type" placeholder="Enter Act Type" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Cnfn No</label>
-                    <input type="text" class="form-control" placeholder="Enter Cnfn No" />
+                    <input type="text" class="form-control" name="cnfn_no" placeholder="Enter Cnfn No" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">No.Men</label>
-                    <input type="text" class="form-control" placeholder="Enter No.Men" />
+                    <input type="text" class="form-control" name="no_men" placeholder="Enter No.Men" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Dur. Hrs</label>
-                    <input type="text" class="form-control" placeholder="Enter Dur. Hrs" />
+                    <input type="text" class="form-control" name="dur_hrs" placeholder="Enter Dur. Hrs" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">St Txt Key</label>
-                    <input type="text" class="form-control" placeholder="Enter St Txt Key" />
+                    <input type="text" class="form-control" name="st_txt_key" placeholder="Enter St Txt Key" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Oper No.</label>
-                    <input type="text" class="form-control" placeholder="Enter Oper No." />
+                    <input type="text" class="form-control" name="oper_no" placeholder="Enter Oper No." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Catalog Profile</label>
-                    <input type="text" class="form-control" placeholder="Enter Catalog Profile" />
+                    <input type="text" class="form-control" name="catalog_profile" placeholder="Enter Catalog Profile" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">O&M Manual Doc.No.</label>
-                    <input type="text" class="form-control" placeholder="Enter O&M Manual Doc.No." />
+                    <input type="text" class="form-control" name="om_manual_doc_no" placeholder="Enter O&M Manual Doc.No." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Material No & Desc</label>
-                    <input type="text" class="form-control" placeholder="Enter Material No & Desc" />
+                    <input type="text" class="form-control" name="material_no_desc" placeholder="Enter Material No & Desc" />
                 </div>
                <div class="col-lg-6 mb-3">
                     <div class="d-flex align-items-center justify-content-start gap-2">
                         <input class="form-check-input rounded w-25px h-25px" type="checkbox" id="recurrence_check"/>
-                        <label class="text-black fs-7 fw-semibold">Recurrence<span class="text-danger">*</span></label>
+                        <label class="text-black fs-7 fw-semibold" for="recurrence_check">Recurrence</label>
                     </div>
-                    <select class="select3 form-select d-none mt-1" id="recurrence_select">
-                        <option value="">Select Recurrence</option>
-                        <option value="1">Quarterly</option>
-                        <option value="2">Yearly</option>
-                    </select>
+                    <div id="recurrence_wrapper" class="d-none mt-2">
+                        <select class="select3 form-select" name="recurrence" id="recurrence_select">
+                            <option value="">Select Recurrence</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Yearly">Yearly</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <div class="row">
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="scaffolding" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="scaffolding">
+                                <input class="form-check-input" type="radio" id="scaffolding_add" value="Scaffolding" name="scaff_crane">
+                                <label class="form-check-label text-black fw-semibold" for="scaffolding_add">
                                     Scaffolding
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="crane" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="crane">
+                                <input class="form-check-input" type="radio" id="crane_add" value="Crane" name="scaff_crane">
+                                <label class="form-check-label text-black fw-semibold" for="crane_add">
                                     Crane
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="crane" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="crane">
+                                <input class="form-check-input" type="radio" id="scaff_crane_add" value="Scaffolding + Crane" name="scaff_crane">
+                                <label class="form-check-label text-black fw-semibold" for="scaff_crane_add">
                                     Scaffolding + Crane
                                 </label>
                             </div>
@@ -2100,9 +1853,10 @@
         <div class="modal-footer pt-5">
           <div class="d-flex justify-content-end align-items-center">
             <button type="reset" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Create Work Order</button>
+            <button type="submit" class="btn btn-primary" id="btn_save_workorder">Create Work Order</button>
           </div>
         </div>
+        </form>
         <!--end::Modal body-->
       </div>
       <!--end::Modal content-->
@@ -2133,103 +1887,78 @@
         </div>
         <!--end::Modal header-->
         <!--begin::Modal body-->
+        <form id="updateWorkOrderForm">
+        @csrf
+        <input type="hidden" name="work_order_id" id="update_work_order_id">
         <div class="modal-body py-5 px-10 px-xl-20">
             <div class="row scroll-y" style="max-height: 650px;">
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Client<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="client_id" id="up_client_id" required>
                         <option value="">Select Client</option>
-                        <option value="1">Qatar Energy</option>
-                        <option value="2">Qatar Gas</option>
-                        <option value="3">Oryx GTL</option>
+                        @foreach($clients as $val)
+                            <option value="{{ $val->id }}">{{ $val->company_name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Asset<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="asset_id" id="up_asset_id" required>
                         <option value="">Select Asset</option>
-                        <option value="1">11-SRV-1</option>
-                        <option value="2">AST-GV-032</option>
-                        <option value="3">AST-CV-017</option>
-                        <option value="4">AST-SRV-027</option>
+                        @foreach($assets as $val)
+                            <option value="{{ $val->id }}">{{ $val->tag_number ?? $val->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Procedure<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="procedure_id" id="up_procedure_id" required>
                         <option value="">Select Procedure</option>
-                        <option value="1">Standard SRV Removal & Transport</option>
-                        <option value="2">SRV bench Testing & Calibration</option>
+                         @foreach($procedures as $val)
+                            <option value="{{ $val->id }}">{{ $val->title }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Order Title</label>
-                    <input type="text" class="form-control" placeholder="Enter Order Title" />
+                    <input type="text" class="form-control" name="title" id="up_title" placeholder="Enter Order Title" />
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Description</label>
-                    <textarea class="form-control" rows="1" placeholder="Enter Description"></textarea>
+                    <textarea class="form-control" name="description" id="up_description" rows="1" placeholder="Enter Description"></textarea>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <label class="text-black mb-2 fs-7 fw-semibold">Assign Tools & Equipments</label>
                     <div class="row border p-3 g-2 rounded scroll-y max-h-250px">
+                        @foreach($tools as $tool)
                         <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
                             <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
+                                <input class="form-check-input rounded w-25px h-25px up_tools" type="checkbox" name="tools[]" value="{{ $tool->id }}" id="up_tool_{{ $tool->id }}" />
                                 <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">50T Mobile Crane</label>
-                                    <label class="fw-medium text-dark fs-7">CR-SD-220-X</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Hydraulic Torque Wrench Kit</label>
-                                    <label class="fw-medium text-dark fs-7">HTW-004-A</label>
+                                    <label class="fw-medium text-black fs-7" for="up_tool_{{ $tool->id }}">{{ $tool->name }}</label>
+                                    <label class="fw-medium text-dark fs-7">{{ $tool->serial_number ?? $tool->type }}</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Grinding Machine</label>
-                                    <label class="fw-medium text-dark fs-7">GM-154-S</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-5 bg-gray-100 p-3">
-                            <div class="d-flex align-items-center justify-content-start gap-2 bg-gray-100">
-                                <input class="form-check-input rounded w-25px h-25px" type="checkbox" />
-                                <div class="d-flex flex-column">
-                                    <label class="fw-medium text-black fs-7">Valve Testing Bench</label>
-                                    <label class="fw-medium text-dark fs-7">VTB-097-A</label>
-                                </div>
-                            </div>
-                            <label class="fw-medium text-danger bg-label-danger fs-7">Expired</label>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Order Type<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="order_type" id="up_order_type" required>
                         <option value="">Select Order Type</option>
-                        <option value="1">Maintanence</option>
-                        <option value="2">Repair</option>
-                        <option value="3">Inspection</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Repair">Repair</option>
+                        <option value="Inspection">Inspection</option>
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Priority<span class="text-danger">*</span></label>
-                    <select class="select3 form-select">
+                    <select class="select3 form-select" name="priority" id="up_priority" required>
                         <option value="">Select Priority</option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                        <option value="3">C</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
                     </select>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -2238,7 +1967,7 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="compliance_date" id="up_compliance_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -2247,7 +1976,7 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="assigned_date" id="up_assigned_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
@@ -2256,90 +1985,92 @@
                         <span class="input-group-text">
                             <i class="mdi mdi-calendar-month-outline fs-4"></i>
                         </span>
-                        <input type="text" class="form-control common_datepicker" placeholder="Select Date">
+                        <input type="text" name="tentative_removal_date" id="up_tentative_removal_date" class="form-control common_datepicker" placeholder="Select Date" required>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">ABC Ind.</label>
-                    <input type="text" class="form-control" placeholder="Enter ABC Ind." />
+                    <input type="text" class="form-control" name="abc_ind" id="up_abc_ind" placeholder="Enter ABC Ind." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Scheudling Grp</label>
-                    <input type="text" class="form-control" placeholder="Enter Scheudling Grp" />
+                    <input type="text" class="form-control" name="scheduling_grp" id="up_scheduling_grp" placeholder="Enter Scheudling Grp" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Haz Area</label>
-                    <input type="text" class="form-control" placeholder="Enter Haz Area" />
+                    <input type="text" class="form-control" name="haz_area" id="up_haz_area" placeholder="Enter Haz Area" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Act Type</label>
-                    <input type="text" class="form-control" placeholder="Enter Act Type" />
+                    <input type="text" class="form-control" name="act_type" id="up_act_type" placeholder="Enter Act Type" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Cnfn No</label>
-                    <input type="text" class="form-control" placeholder="Enter Cnfn No" />
+                    <input type="text" class="form-control" name="cnfn_no" id="up_cnfn_no" placeholder="Enter Cnfn No" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">No.Men</label>
-                    <input type="text" class="form-control" placeholder="Enter No.Men" />
+                    <input type="text" class="form-control" name="no_men" id="up_no_men" placeholder="Enter No.Men" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Dur. Hrs</label>
-                    <input type="text" class="form-control" placeholder="Enter Dur. Hrs" />
+                    <input type="text" class="form-control" name="dur_hrs" id="up_dur_hrs" placeholder="Enter Dur. Hrs" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">St Txt Key</label>
-                    <input type="text" class="form-control" placeholder="Enter St Txt Key" />
+                    <input type="text" class="form-control" name="st_txt_key" id="up_st_txt_key" placeholder="Enter St Txt Key" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Oper No.</label>
-                    <input type="text" class="form-control" placeholder="Enter Oper No." />
+                    <input type="text" class="form-control" name="oper_no" id="up_oper_no" placeholder="Enter Oper No." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Catalog Profile</label>
-                    <input type="text" class="form-control" placeholder="Enter Catalog Profile" />
+                    <input type="text" class="form-control" name="catalog_profile" id="up_catalog_profile" placeholder="Enter Catalog Profile" />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">O&M Manual Doc.No.</label>
-                    <input type="text" class="form-control" placeholder="Enter O&M Manual Doc.No." />
+                    <input type="text" class="form-control" name="om_manual_doc_no" id="up_om_manual_doc_no" placeholder="Enter O&M Manual Doc.No." />
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label class="text-black mb-1 fs-7 fw-semibold">Material No & Desc</label>
-                    <input type="text" class="form-control" placeholder="Enter Material No & Desc" />
+                    <input type="text" class="form-control" name="material_no_desc" id="up_material_no_desc" placeholder="Enter Material No & Desc" />
                 </div>
                <div class="col-lg-6 mb-3">
                     <div class="d-flex align-items-center justify-content-start gap-2">
-                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" id="recurrence_check"/>
-                        <label class="text-black fs-7 fw-semibold">Recurrence<span class="text-danger">*</span></label>
+                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" id="up_recurrence_check"/>
+                        <label class="text-black fs-7 fw-semibold" for="up_recurrence_check">Recurrence</label>
                     </div>
-                    <select class="select3 form-select d-none mt-2" id="recurrence_select">
-                        <option value="">Select Recurrence</option>
-                        <option value="1">Quarterly</option>
-                        <option value="2">Yearly</option>
-                    </select>
+                    <div id="up_recurrence_wrapper" class="d-none mt-2">
+                        <select class="select3 form-select" name="recurrence" id="up_recurrence_select">
+                            <option value="">Select Recurrence</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Yearly">Yearly</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-lg-12 mb-3">
                     <div class="row">
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="scaffolding" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="scaffolding">
+                                <input class="form-check-input" type="radio" id="up_scaffolding" name="scaff_crane" value="Scaffolding">
+                                <label class="form-check-label text-black fw-semibold" for="up_scaffolding">
                                     Scaffolding
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="crane" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="crane">
+                                <input class="form-check-input" type="radio" id="up_crane" name="scaff_crane" value="Crane">
+                                <label class="form-check-label text-black fw-semibold" for="up_crane">
                                     Crane
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-4 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="crane" name="scaff_crane">
-                                <label class="form-check-label text-black fw-semibold" for="crane">
+                                <input class="form-check-input" type="radio" id="up_scaff_crane" name="scaff_crane" value="Scaffolding + Crane">
+                                <label class="form-check-label text-black fw-semibold" for="up_scaff_crane">
                                     Scaffolding + Crane
                                 </label>
                             </div>
@@ -2351,9 +2082,10 @@
         <div class="modal-footer pt-5">
           <div class="d-flex justify-content-end align-items-center">
             <button type="reset" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update Work Order</button>
+            <button type="submit" class="btn btn-primary" id="btn_update_workorder">Update Work Order</button>
           </div>
         </div>
+        </form>
         <!--end::Modal body-->
       </div>
       <!--end::Modal content-->
@@ -2551,5 +2283,320 @@ $(document).ready(function(){
             // "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
             ">"
     });
+</script>
+<script>
+$(document).ready(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Clear validation errors on input
+    $('#addWorkOrderForm, #kt_modal_update_workorder_form').on('input change', 'input, select, textarea', function() {
+        $(this).removeClass('is-invalid');
+    });
+
+    // Toggle Recurrence Add Modal
+    $('#recurrence_check').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#recurrence_wrapper').removeClass('d-none');
+            $('#recurrence_select').prop('required', true);
+        } else {
+            $('#recurrence_wrapper').addClass('d-none');
+            $('#recurrence_select').prop('required', false).val('').trigger('change');
+        }
+    });
+
+    // Toggle Recurrence Update Modal
+    $('#up_recurrence_check').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#up_recurrence_wrapper').removeClass('d-none');
+            $('#up_recurrence_select').prop('required', true);
+        } else {
+            $('#up_recurrence_wrapper').addClass('d-none');
+            $('#up_recurrence_select').prop('required', false).val('').trigger('change');
+        }
+    });
+
+    // Add Work Order
+    $('#addWorkOrderForm').on('submit', function(e) {
+        e.preventDefault();
+        $(this).find('.is-invalid').removeClass('is-invalid');
+        var formData = new FormData(this);
+        $.ajax({
+            url: "{{ url('manage_work_order/store') }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $('#btn_save_workorder').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading...');
+            },
+            complete: function() {
+                $('#btn_save_workorder').prop('disabled', false).html('Create Work Order');
+            },
+            success: function(response) {
+                if(response.success) {
+                    $('#kt_modal_add_workorder').modal('hide');
+                    if(typeof toastr !== 'undefined') toastr.success(response.message || 'Work order created successfully.');
+                    else alert(response.message || 'Work order created successfully.');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    if (response.errors) {
+                        var errorMsg = '';
+                        $.each(response.errors, function(key, value) {
+                            errorMsg += value[0] + '<br>';
+                            $('#addWorkOrderForm [name="'+key+'"]').addClass('is-invalid');
+                        });
+                        if(typeof toastr !== 'undefined') toastr.error(errorMsg, 'Validation Error');
+                        else alert('Validation Error:\n' + errorMsg.replace(/<br>/g, '\n'));
+                    } else {
+                        if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error creating work order.');
+                        else alert(response.message || 'Error creating work order.');
+                    }
+                }
+            },
+            error: function(xhr) {
+                if(typeof toastr !== 'undefined') toastr.error('An error occurred. Check your network or server logs.'); 
+                else alert('An error occurred.');
+            }
+        });
+    });
+
+    // Fetch Work Order (Populate Update Modal and Detail Panel)
+    $(document).on('click', '.view_work_order', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        
+        $.ajax({
+            url: "{{ url('manage_work_order/show') }}/" + id,
+            type: "GET",
+            success: function(response) {
+                if(response && response.success) {
+                    var data = response.data;
+                    // Populate Update Form
+                    $('#update_id').val(data.id);
+                    $('#update_title').val(data.title);
+                    $('#update_description').val(data.description);
+                    $('#update_order_type').val(data.order_type).trigger('change');
+                    $('#update_priority').val(data.priority).trigger('change');
+                    $('#update_company_id').val(data.company_id).trigger('change');
+                    $('#update_asset_id').val(data.asset_id).trigger('change');
+                    $('#update_procedure_id').val(data.procedure_id).trigger('change');
+                    
+                    // Set Date Pickers using Flatpickr API if available
+                    if (data.compliance_date && $('#up_compliance_date')[0]._flatpickr) {
+                        $('#up_compliance_date')[0]._flatpickr.setDate(data.compliance_date);
+                    } else {
+                        $('#up_compliance_date').val(data.compliance_date);
+                    }
+                    if (data.assigned_date && $('#up_assigned_date')[0]._flatpickr) {
+                        $('#up_assigned_date')[0]._flatpickr.setDate(data.assigned_date);
+                    } else {
+                        $('#up_assigned_date').val(data.assigned_date);
+                    }
+                    if (data.tentative_removal_date && $('#up_tentative_removal_date')[0]._flatpickr) {
+                        $('#up_tentative_removal_date')[0]._flatpickr.setDate(data.tentative_removal_date);
+                    } else {
+                        $('#up_tentative_removal_date').val(data.tentative_removal_date);
+                    }
+
+                    $('#up_abc_ind').val(data.abc_ind);
+                    $('#up_scheduling_grp').val(data.scheduling_grp);
+                    $('#up_haz_area').val(data.haz_area);
+                    $('#up_act_type').val(data.act_type);
+                    $('#up_cnfn_no').val(data.cnfn_no);
+                    $('#up_no_men').val(data.no_men);
+                    $('#up_dur_hrs').val(data.dur_hrs);
+                    $('#up_st_txt_key').val(data.st_txt_key);
+                    $('#up_oper_no').val(data.oper_no);
+                    $('#up_catalog_profile').val(data.catalog_profile);
+                    $('#up_om_manual_doc_no').val(data.om_manual_doc_no);
+                    $('#up_material_no_desc').val(data.material_no_desc);
+
+                    $('#up_recurrence_select').val(data.recurrence).trigger('change');
+                    if(data.recurrence) {
+                        $('#up_recurrence_check').prop('checked', true);
+                        $('#up_recurrence_wrapper').removeClass('d-none');
+                        $('#up_recurrence_select').prop('required', true);
+                    } else {
+                        $('#up_recurrence_check').prop('checked', false);
+                        $('#up_recurrence_wrapper').addClass('d-none');
+                        $('#up_recurrence_select').prop('required', false);
+                    }
+
+                    if(data.scaff_crane) {
+                        $('input[name="scaff_crane"][value="'+data.scaff_crane+'"]').prop('checked', true);
+                    } else {
+                        $('input[name="scaff_crane"]').prop('checked', false);
+                    }
+                    
+                    // Clear and set tools
+                    $('input[name="tools[]"]').prop('checked', false);
+                    if(data.tools) {
+                        data.tools.forEach(function(tool) {
+                            $('#up_tool_' + tool.id).prop('checked', true);
+                        });
+                    }
+
+                    // Populate Detail Panel
+                    var assetLabel = 'N/A';
+                    if(data.asset) {
+                        assetLabel = data.asset.tag_number ? data.asset.tag_number : data.asset.name;
+                    }
+                    $('#detail_asset_tag').text(assetLabel);
+                    $('#detail_wo_id').text(data.id);
+                    $('#detail_priority').text('Priority: ' + (data.priority ? data.priority : '--'));
+                    $('#detail_desc').text(data.description ? data.description : '--');
+
+                    // Populate Wizard Form
+                    $('#wizardForm')[0].reset();
+                    $('#wizard_work_order_id').val(data.id);
+                    if(data.wizard_data) {
+                        try {
+                            var parsedWizardData = typeof data.wizard_data === 'string' ? JSON.parse(data.wizard_data) : data.wizard_data;
+                            $.each(parsedWizardData, function(key, value) {
+                                var $field = $('#wizardForm [name="'+key+'"]');
+                                if($field.length > 0) {
+                                    if($field.is('input[type="checkbox"]')) {
+                                        if (value === 'on' || value === true || value === 1 || value === '1') {
+                                            $field.prop('checked', true);
+                                        }
+                                    } else if($field.is('input[type="radio"]')) {
+                                        $field.filter('[value="'+value+'"]').prop('checked', true);
+                                    } else {
+                                        $field.val(value).trigger('change');
+                                    }
+                                }
+                            });
+                        } catch(e) { console.error('Error parsing wizard data:', e); }
+                    }
+                } else if (!response.success) {
+                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error fetching details.');
+                }
+            }
+        });
+    });
+
+    // Asset Map View Data Fetching from Detail Panel Row
+    $(document).on('click', '.asset-row', function(e) {
+        var id = $(this).data('id');
+        if(id) {
+            $('.view_work_order[data-id="'+id+'"]').trigger('click');
+        }
+    });
+
+    // Update Work Order
+    $('#kt_modal_update_workorder_form').on('submit', function(e) {
+        e.preventDefault();
+        $(this).find('.is-invalid').removeClass('is-invalid');
+        var id = $('#update_id').val();
+        var formData = new FormData(this);
+        $.ajax({
+            url: "{{ url('manage_work_order/update') }}/" + id,
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $('#btn_update_workorder').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading...');
+            },
+            complete: function() {
+                $('#btn_update_workorder').prop('disabled', false).html('Update Work Order');
+            },
+            success: function(response) {
+                if(response.success) {
+                    $('#kt_modal_update_workorder').modal('hide');
+                    if(typeof toastr !== 'undefined') toastr.success(response.message || 'Work order updated successfully.'); 
+                    else alert(response.message || 'Work order updated successfully.');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    if (response.errors) {
+                        var errorMsg = '';
+                        $.each(response.errors, function(key, value) {
+                            errorMsg += value[0] + '<br>';
+                            $('#kt_modal_update_workorder_form [name="'+key+'"]').addClass('is-invalid');
+                        });
+                        if(typeof toastr !== 'undefined') toastr.error(errorMsg, 'Validation Error');
+                        else alert('Validation Error:\n' + errorMsg.replace(/<br>/g, '\n'));
+                    } else {
+                        if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error updating work order.');
+                        else alert(response.message || 'Error updating work order.');
+                    }
+                }
+            },
+            error: function(xhr) {
+                if(typeof toastr !== 'undefined') toastr.error('An error occurred.'); else alert('An error occurred.');
+            }
+        });
+    });
+
+    // Save Wizard Form
+    $('#submitWizard').on('click', function(e) {
+        e.preventDefault();
+        
+        var workOrderId = $('#wizard_work_order_id').val();
+        if(!workOrderId) {
+            if(typeof toastr !== 'undefined') toastr.error('No Work Order selected for wizard.');
+            else alert('No Work Order selected for wizard.');
+            return;
+        }
+
+        var formData = new FormData($('#wizardForm')[0]);
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+        var $btn = $(this);
+        $.ajax({
+            url: "{{ url('manage_work_order/update_wizard') }}/" + workOrderId,
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span> Saving...');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('Submit / Close');
+            },
+            success: function(response) {
+                if(response.success) {
+                    if(typeof toastr !== 'undefined') toastr.success(response.message || 'Wizard data saved successfully.');
+                    else alert(response.message || 'Wizard data saved successfully.');
+                } else {
+                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error saving wizard data.');
+                    else alert(response.message || 'Error saving wizard data.');
+                }
+            },
+            error: function(xhr) {
+                if(typeof toastr !== 'undefined') toastr.error('An error occurred while saving wizard.');
+                else alert('An error occurred while saving wizard.');
+            }
+        });
+    });
+
+    // Delete Work Order
+    $(document).on('click', '.delete_work_order', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        if(confirm('Are you sure you want to delete this work order?')) {
+            $.ajax({
+                url: "{{ url('manage_work_order/delete') }}/" + id,
+                type: "DELETE",
+                success: function(response) {
+                    if(response.success) {
+                        if(typeof toastr !== 'undefined') toastr.success(response.message || 'Work order deleted successfully.'); else alert(response.message || 'Work order deleted successfully.');
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error deleting work order.'); else alert(response.message || 'Error deleting work order.');
+                    }
+                },
+                error: function(xhr) {
+                    if(typeof toastr !== 'undefined') toastr.error('An error occurred while deleting.'); else alert('An error occurred while deleting.');
+                }
+            });
+        }
+    });
+});
 </script>
 @endsection

@@ -36,17 +36,17 @@ class Asset extends Model
 
     public function sector()
     {
-        return $this->belongsTo(Sector::class);
+        return $this->belongsTo(SectorModel::class);
     }
 
     public function plant()
     {
-        return $this->belongsTo(Plant::class);
+        return $this->belongsTo(PlantModel::class);
     }
 
     public function room()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(RoomModel::class);
     }
 
     public function procedures()

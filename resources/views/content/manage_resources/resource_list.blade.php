@@ -185,22 +185,21 @@
                 <div class="d-flex justify-content-end align-items-center mb-2 gap-2">
                     <div class="searchBar" style="position: relative; width: 300px;">
                         <input class="form-control" type="text" name="searchQueryInput" id="customSearchInput"
-                            placeholder="Search Resources Name" value="" oninput="toggleIcons(this)"
-                            style="padding-left: 35px;" />
+                            placeholder="Search Resources Name" value="" style="padding-left: 35px;" />
                         <svg style="width:20px;height:20px;position:absolute;left:10px;top:50%;transform:translateY(-50%);fill:#0076b6;"
                             viewBox="0 0 24 24">
                             <path
                                 d="M9.5,3A6.5,6.5 0 0,1 16,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                C16,11.11 15.41,12.59 14.44,13.73
-                                                                                                                                                                                                                                                                                                                                                                                                                L14.71,14H15.5L20.5,19L19,20.5
-                                                                                                                                                                                                                                                                                                                                                                                                                L14,15.5V14.71L13.73,14.44
-                                                                                                                                                                                                                                                                                                                                                                                                                C12.59,15.41 11.11,16
-                                                                                                                                                                                                                                                                                                                                                                                                                9.5,16A6.5,6.5 0 0,1 3,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                A6.5,6.5 0 0,1 9.5,3
-                                                                                                                                                                                                                                                                                                                                                                                                                M9.5,5C7,5 5,7 5,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                C5,12 7,14 9.5,14
-                                                                                                                                                                                                                                                                                                                                                                                                                C12,14 14,12 14,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                C14,7 12,5 9.5,5Z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                    C16,11.11 15.41,12.59 14.44,13.73
+                                                                                                                                                                                                                                                                                                                                                                                                                    L14.71,14H15.5L20.5,19L19,20.5
+                                                                                                                                                                                                                                                                                                                                                                                                                    L14,15.5V14.71L13.73,14.44
+                                                                                                                                                                                                                                                                                                                                                                                                                    C12.59,15.41 11.11,16
+                                                                                                                                                                                                                                                                                                                                                                                                                    9.5,16A6.5,6.5 0 0,1 3,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                    A6.5,6.5 0 0,1 9.5,3
+                                                                                                                                                                                                                                                                                                                                                                                                                    M9.5,5C7,5 5,7 5,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                    C5,12 7,14 9.5,14
+                                                                                                                                                                                                                                                                                                                                                                                                                    C12,14 14,12 14,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                    C14,7 12,5 9.5,5Z" />
                         </svg>
                     </div>
                     <a href="javascript:void(0)" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
@@ -526,7 +525,8 @@
 
                         <!-- DOWNLOAD SAMPLE -->
                         <div class="mb-3">
-                            <a href="{{ asset('dummy_resources.xlsx') }}" class="btn btn-sm btn-outline-primary" download>
+                            <a href="{{ asset('dummy_resources.xlsx') }}" class="btn btn-sm btn-outline-primary"
+                                download>
                                 Download Sample Excel
                             </a>
                         </div>
@@ -955,7 +955,7 @@
                     if (file) {
                         formData.append(`doc_file[${i}]`, file);
                     }
-                    
+
                     formData.append(`old_doc_file[${i}]`, oldFile);
                 });
 
@@ -1049,15 +1049,15 @@
                             </div>
 
                             ${doc.file ? `
-                                <div class="mt-2 mb-2 d-flex justify-content-center gap-2" style="position:relative; z-index:10;">
-                                    <a href="/${doc.file}" target="_blank" class="btn btn-sm btn-outline-primary px-2 py-1">
-                                        <i class="mdi mdi-eye-outline me-1"></i> View
-                                    </a>
-                                    <a href="/${doc.file}" download class="btn btn-sm btn-primary px-2 py-1">
-                                        <i class="mdi mdi-download-outline me-1"></i> Download
-                                    </a>
-                                </div>
-                            ` : ''}
+                                    <div class="mt-2 mb-2 d-flex justify-content-center gap-2" style="position:relative; z-index:10;">
+                                        <a href="/${doc.file}" target="_blank" class="btn btn-sm btn-outline-primary px-2 py-1">
+                                            <i class="mdi mdi-eye-outline me-1"></i> View
+                                        </a>
+                                        <a href="/${doc.file}" download class="btn btn-sm btn-primary px-2 py-1">
+                                            <i class="mdi mdi-download-outline me-1"></i> Download
+                                        </a>
+                                    </div>
+                                ` : ''}
                             <input type="hidden" class="edit_old_doc_file" value="${doc.file ?? ''}">
 
                             <input type="file"
@@ -1117,7 +1117,7 @@
             // =========================
             $("#customSearchInput").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
-                
+
                 $(".resource-grid .resource-card").filter(function() {
                     let cardText = $(this).text().toLowerCase();
                     $(this).toggle(cardText.indexOf(value) > -1);
@@ -1125,8 +1125,5 @@
             });
 
         });
-
-
-
     </script>
 @endsection

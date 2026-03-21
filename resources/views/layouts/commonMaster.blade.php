@@ -35,7 +35,7 @@
     <!-- Canonical SEO -->
     <link rel="canonical" href="{{ config('variables.productPage') ? config('variables.productPage') : '' }}">
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo/logo.png') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo/fav_logo.png') }}" />
     <link href="{{ url('assets/custom_file/swal2.css') }}" rel="stylesheet" type="text/css" />
 
 
@@ -57,6 +57,54 @@
     @include('layouts/sections/scriptsIncludes' . $isFront)
 
 </head>
+<style>
+    .empty-state {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        background: #f8f9fa;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .empty-box {
+        padding: 40px;
+    }
+
+    .empty-icon {
+        font-size: 70px;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .empty-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .empty-text {
+        font-size: 16px;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .empty-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 6px;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .empty-btn:hover {
+        background: #0056b3;
+    }
+</style>
 <style>
     .txt_vertical {
         writing-mode: vertical-lr;

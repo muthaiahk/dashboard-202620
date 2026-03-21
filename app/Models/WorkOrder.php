@@ -16,7 +16,32 @@ class WorkOrder extends Model
         'procedure_id',
         'status',
         'scheduled_date',
-        'completed_date'
+        'completed_date',
+        'description',
+        'order_type',
+        'priority',
+        'compliance_date',
+        'assigned_date',
+        'tentative_removal_date',
+        'abc_ind',
+        'scheduling_grp',
+        'haz_area',
+        'act_type',
+        'cnfn_no',
+        'no_men',
+        'dur_hrs',
+        'st_txt_key',
+        'oper_no',
+        'catalog_profile',
+        'om_manual_doc_no',
+        'material_no_desc',
+        'recurrence',
+        'scaff_crane',
+        'wizard_data',
+    ];
+
+    protected $casts = [
+        'wizard_data' => 'array',
     ];
 
     public function asset()

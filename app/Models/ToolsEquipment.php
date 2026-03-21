@@ -9,6 +9,8 @@ class ToolsEquipment extends Model
 {
     use HasFactory;
 
+    protected $table = "equipments";
+
     protected $fillable = ['name', 'type', 'status', 'description', 'serial_number'];
 
     public function workOrders()

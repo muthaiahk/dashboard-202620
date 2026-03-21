@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     use HasFactory;
-
+    protected $table = 'clients';
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'company',
+        'company_name',
+        'mobile_no',
+        'email_id',
+        'location',
         'address',
+        'sector_details',
+        'description',
         'status'
     ];
-
     public function assets()
     {
         return $this->hasMany(Asset::class);

@@ -8,6 +8,7 @@
 
 @section('vendor-script')
     @vite(['resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js', 'resources/assets/vendor/libs/flatpickr/flatpickr.js', 'resources/assets/vendor/libs/nouislider/nouislider.js', 'resources/assets/vendor/libs/jquery-repeater/jquery-repeater.js', 'resources/assets/vendor/libs/dropzone/dropzone.js', 'resources/assets/vendor/js/dropdown-hover.js'])
+    @vite(['resources/assets/vendor/libs/dropzone/dropzone.js'])
 @endsection
 
 @section('page-script')
@@ -210,15 +211,17 @@
             </div>
             <div class="card-action-element">
                 <div class="d-flex justify-content-end align-items-center mb-2 gap-2">
-                    <a href="javascript:;"
-                        class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary"
-                        data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
-                        <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
-                    </a>
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_asset">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Customer Asset
-                    </a>
+                    @if (auth()->user()->hasPermission('Manage Customer Asset', 'is_create'))
+                        <a href="javascript:;"
+                            class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary"
+                            data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
+                            <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
+                        </a>
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_asset">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Customer Asset
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -313,18 +316,23 @@
                 <div class="asset-detail-panel">
                     <div class="detail-header">
                         <div class="detail-desc">
+                            <input type="hidden" id="hiddenassetsids" />
                             <h4 id="detail_tag_number">-</h4>
                             <span class="text-dark fw-semibold fs-7" id="detail_description">-</span>
                         </div>
                         <div class="detail-desc">
                             <div class="mb-3">
                                 <span class="tag" id="detail_plant_tag">-</span>
-                                <a href="javascript:;" type="button"
-                                    class="btn btn-sm btn-primary-outline border border-primary text-primary"
-                                    id="edit_asset_btn"><i class="mdi mdi-pencil-outline"></i>Edit</a>
+                                @if (auth()->user()->hasPermission('Manage Customer Asset', 'is_update'))
+                                    <a href="javascript:;" type="button"
+                                        class="btn btn-sm btn-primary-outline border border-primary text-primary"
+                                        id="edit_asset_btn"><i class="mdi mdi-pencil-outline"></i>Edit</a>
+                                @endif
                             </div>
-                            <div>
-                                <label class="badge bg-label-success fw-medium fs-7 border border-success rounded">
+                            <div id="statusdivchanges">
+                                <label
+                                    class="badge bg-label-success fw-medium fs-7 border border-success rounded assets-status-toggle"
+                                    style="cursor:pointer;">
                                     <i class="mdi mdi-check text-success"></i> Active
                                 </label>
                             </div>
@@ -809,7 +817,21 @@
                     if (!res.status) return;
                     let a = res.data;
 
+                    let statusBadge = $('#statusdivchanges .assets-status-toggle');
+
+                    if (a.status == 1) {
+                        statusBadge
+                            .removeClass("bg-label-danger border-danger")
+                            .addClass("bg-label-success border-success")
+                            .html('<i class="mdi mdi-check text-success"></i> Active');
+                    } else {
+                        statusBadge
+                            .removeClass("bg-label-success border-success")
+                            .addClass("bg-label-danger border-danger")
+                            .html('<i class="mdi mdi-alpha-x text-danger"></i> Inactive');
+                    }
                     // Populate detail panel
+                    $("#hiddenassetsids").val(a.id);
                     $("#detail_tag_number").text(a.tag_number || '-');
                     $("#detail_description").text(a.description || a.name || '-');
                     $("#detail_plant_tag").text(a.plant ? a.plant.name : 'N/A');
@@ -1135,51 +1157,102 @@
         });
 
         // Bulk Upload Dropzone
-        Dropzone.autoDiscover = false;
-        let assetBulkDropzone = new Dropzone("#assetBulkDropzone", {
-            url: "{{ route('assets.bulkUpload') }}",
-            autoProcessQueue: false,
-            paramName: "file",
-            maxFiles: 1,
-            acceptedFiles: ".xlsx, .xls, .csv",
-            addRemoveLinks: true,
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            init: function() {
-                let myDropzone = this;
+        // Dropzone.autoDiscover = false;
+        // let assetBulkDropzone = new Dropzone("#assetBulkDropzone", {
+        //     url: "{{ route('assets.bulkUpload') }}",
+        //     autoProcessQueue: false,
+        //     paramName: "file",
+        //     maxFiles: 1,
+        //     acceptedFiles: ".xlsx, .xls, .csv",
+        //     addRemoveLinks: true,
+        //     headers: {
+        //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        //     },
+        //     init: function() {
+        //         let myDropzone = this;
 
-                $("#upload_assets_btn").click(function(e) {
-                    e.preventDefault();
-                    if (myDropzone.getQueuedFiles().length > 0) {
-                        myDropzone.processQueue();
-                    } else {
-                        toastr.error("Please select a file to upload.");
+        //         $("#upload_assets_btn").click(function(e) {
+        //             e.preventDefault();
+        //             if (myDropzone.getQueuedFiles().length > 0) {
+        //                 myDropzone.processQueue();
+        //             } else {
+        //                 toastr.error("Please select a file to upload.");
+        //             }
+        //         });
+
+        //         this.on("sending", function(file, xhr, formData) {
+        //             $("#upload_assets_btn").prop('disabled', true).html('Uploading...');
+        //         });
+
+        //         this.on("success", function(file, response) {
+        //             if (response.status) {
+        //                 toastr.success(response.message);
+        //                 $("#kt_modal_bulk_upload").modal("hide");
+        //                 setTimeout(() => location.reload(), 1500);
+        //             } else {
+        //                 toastr.error(response.message);
+        //                 $("#upload_assets_btn").prop('disabled', false).html('Upload');
+        //             }
+        //         });
+
+        //         this.on("error", function(file, message) {
+        //             toastr.error(typeof message === 'string' ? message : (message.message ||
+        //                 "An error occurred"));
+        //             $("#upload_assets_btn").prop('disabled', false).html('Upload');
+        //             this.removeFile(file);
+        //         });
+        //     }
+        // });
+        $(document).ready(function() {
+
+            $('.assets-status-toggle').click(function() {
+
+                let badge = $(this);
+                // let id = badge.data('id');
+                let id = $('#hiddenassetsids').val();
+
+                let newStatus = badge.hasClass('bg-label-success') ? 0 : 1;
+
+                $.ajax({
+                    url: "{{ url('/assets/status-update') }}",
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        status: newStatus
+                    },
+                    success: function(response) {
+
+                        badge.fadeOut(150, function() {
+
+                            if (newStatus === 1) {
+                                badge
+                                    .removeClass("bg-label-danger border-danger")
+                                    .addClass("bg-label-success border-success")
+                                    .html(
+                                        '<i class="mdi mdi-check text-success"></i> Active'
+                                    );
+                            } else {
+                                badge
+                                    .removeClass("bg-label-success border-success")
+                                    .addClass("bg-label-danger border-danger")
+                                    .html(
+                                        '<i class="mdi mdi-alpha-x text-danger"></i> Inactive'
+                                    );
+                            }
+
+                            badge.fadeIn(150);
+                            toastr.success("Status updated successfully!");
+                        });
+
+                    },
+                    error: function() {
+                        toastr.error("Something went wrong!");
                     }
                 });
 
-                this.on("sending", function(file, xhr, formData) {
-                    $("#upload_assets_btn").prop('disabled', true).html('Uploading...');
-                });
+            });
 
-                this.on("success", function(file, response) {
-                    if (response.status) {
-                        toastr.success(response.message);
-                        $("#kt_modal_bulk_upload").modal("hide");
-                        setTimeout(() => location.reload(), 1500);
-                    } else {
-                        toastr.error(response.message);
-                        $("#upload_assets_btn").prop('disabled', false).html('Upload');
-                    }
-                });
-
-                this.on("error", function(file, message) {
-                    toastr.error(typeof message === 'string' ? message : (message.message ||
-                        "An error occurred"));
-                    $("#upload_assets_btn").prop('disabled', false).html('Upload');
-                    this.removeFile(file);
-                });
-            }
         });
     </script>
 @endsection

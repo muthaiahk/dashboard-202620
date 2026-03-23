@@ -6,10 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Auth;
+use App\Models\AuditTrail;
 
 class RolePermission extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Roles & Permissions,is_read')->only('index');
+        $this->middleware('permission:Roles & Permissions,is_create')->only('store');
+        $this->middleware('permission:Roles & Permissions,is_update')->only(['update', 'Roleupdate']);
+        $this->middleware('permission:Roles & Permissions,is_delete')->only('destroy');
+    }
+
+    public function index()
   {
     // Load roles with permissions + users
     $roles = Role::with(['permissions', 'users'])->get();
@@ -32,7 +42,11 @@ class RolePermission extends Controller
       ]);
     }
 
-    return view('content.role_permission.role_list', compact('roles', 'modules'));
+    $trails = AuditTrail::with('user')
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+    return view('content.role_permission.role_list', compact('roles', 'modules', 'trails'));
   }
 
   public function update(Request $request)
@@ -42,7 +56,7 @@ class RolePermission extends Controller
 
     $existing = $role->permissions()->where('permission_id', $permission->id)->first();
 
-    $data = [
+    $oldData = [
       'is_create' => $existing->pivot->is_create ?? 0,
       'is_read' => $existing->pivot->is_read ?? 0,
       'is_update' => $existing->pivot->is_update ?? 0,
@@ -50,10 +64,36 @@ class RolePermission extends Controller
       'is_approve' => $existing->pivot->is_approve ?? 0,
     ];
 
-    $data[$request->type] = $request->value;
+    $newData = $oldData;
+    $newData[$request->type] = $request->value;
 
+    // Update permission
     $role->permissions()->syncWithoutDetaching([
-      $permission->id => $data
+      $permission->id => $newData
+    ]);
+
+    // Helper inside your update() method when creating AuditTrail:
+    $actionWord = $request->value
+      ? (in_array($request->type, ['is_create', 'is_read', 'is_update', 'is_delete', 'is_approve']) ? 'added' : 'granted')
+      : 'removed';
+
+    // Clean up the type to a readable word without prefix 'is_'
+    $permissionName = strtolower(str_replace('is_', '', $request->type));
+
+    // Compose details
+    $details = "{$request->module} {$permissionName} permission {$actionWord}";
+
+    // 🔥 Store Audit Log
+    AuditTrail::create([
+      'role' => $role->name,
+      'module' => $request->module,
+      'action' => 'permission_update',
+      'model' => 'RolePermission',
+      'model_id' => $role->id,
+      'old_values' => $oldData,
+      'new_values' => $newData,
+      'details' => $details,
+      'updated_by' => Auth::id(),
     ]);
 
     return response()->json([

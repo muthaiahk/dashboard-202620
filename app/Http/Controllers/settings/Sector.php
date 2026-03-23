@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Http;
 
 class Sector extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:Sector,is_read')->only(['index', 'edit', 'List']);
+        $this->middleware('permission:Sector,is_create')->only('add');
+        $this->middleware('permission:Sector,is_update')->only(['update', 'status']);
+        $this->middleware('permission:Sector,is_delete')->only('delete');
+    }
+
     public function index()
     {
         $lists = SectorModel::where('status', '!=', 2)

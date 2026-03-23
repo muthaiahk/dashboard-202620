@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Team extends Model
+class Team extends BaseModel
 {
     use HasFactory;
 
@@ -51,6 +51,26 @@ class Team extends Model
 
     public function otherStaffUsers()
     {
-        return ResourceModel::whereIn('id', $this->other_staff_ids ?? [])->get();
+        return ResourceModel::with('role')->whereIn('id', $this->other_staff_ids ?? [])->get();
+    }
+
+    protected $appends = ['all_members_data'];
+
+    public function getAllMembersDataAttribute()
+    {
+        $members = [];
+        if ($this->supervisor) $members[] = ['role' => 'Supervisor', 'name' => $this->supervisor->name, 'status' => $this->supervisor->status];
+        if ($this->technician) $members[] = ['role' => 'Technician', 'name' => $this->technician->name, 'status' => $this->technician->status];
+        if ($this->driver) $members[] = ['role' => 'Driver', 'name' => $this->driver->name, 'status' => $this->driver->status];
+
+        foreach ($this->otherStaffUsers() as $staff) {
+            $members[] = [
+                'role' => $staff->role ? $staff->role->name : 'Staff',
+                'name' => $staff->name,
+                'status' => $staff->status
+            ];
+        }
+
+        return $members;
     }
 }

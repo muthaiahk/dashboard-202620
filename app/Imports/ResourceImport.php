@@ -3,54 +3,92 @@
 namespace App\Imports;
 
 use App\Models\ResourceModel;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ResourceImport
+class ResourceImport implements ToCollection
 {
-    public function importRow($row)
+    protected $created = 0;
+
+    public function collection(Collection $rows)
     {
-        // =========================
-        // 1. CREATE RESOURCE
-        // =========================
-        $resource = new ResourceModel();
+        foreach ($rows as $index => $row) {
 
-        $resource->name = $row[0] ?? null;
-        $resource->mobile_number = $row[1] ?? null;
-        $resource->email = $row[2] ?? null;
-        $resource->role_id = $row[3] ?? null;
-        $resource->status = $row[4] ?? null;
-        $resource->address = $row[5] ?? null;
+            // Skip header row
+            if ($index === 0) continue;
 
-        // =========================
-        // 2. CERTIFICATES (ARRAY STYLE LIKE YOUR CODE)
-        // =========================
-        $certificates = [];
-
-        $certNames = explode(',', $row[6] ?? '');
-        $certDates = explode(',', $row[7] ?? '');
-        $certFiles = explode(',', $row[8] ?? '');
-
-        foreach ($certNames as $key => $docName) {
-
-            if (!$docName) continue;
-
-            $filePath = null;
-
-            if (!empty($certFiles[$key])) {
-                $filePath = 'resources/docs/' . $certFiles[$key];
+            // ✅ ROLE VALIDATION
+            if (!Role::find($row[3])) {
+                throw new \Exception("Invalid role_id '{$row[3]}' at row " . ($index + 1));
             }
 
-            $certificates[] = [
-                'name' => $docName,
-                'validity_date' => $certDates[$key] ?? null,
-                'file' => $filePath,
-            ];
+            // ✅ MOBILE VALIDATION
+            if (User::where('mobile_number', $row[1])->exists()) {
+                throw new \Exception("Mobile number '{$row[1]}' already registered for another user at row " . ($index + 1));
+            }
+
+            // =========================
+            // CREATE RESOURCE
+            // =========================
+            $resource = new ResourceModel();
+
+            $resource->name = $row[0] ?? null;
+            $resource->mobile_number = $row[1] ?? null;
+            $resource->email = $row[2] ?? null;
+            $resource->role_id = $row[3] ?? null;
+            $resource->status = $row[4] ?? null;
+            $resource->address = $row[5] ?? null;
+
+            // =========================
+            // CERTIFICATES
+            // =========================
+            $certificates = [];
+
+            $certNames = explode(',', $row[6] ?? '');
+            $certDates = explode(',', $row[7] ?? '');
+            $certFiles = explode(',', $row[8] ?? '');
+
+            foreach ($certNames as $key => $docName) {
+
+                if (!$docName) continue;
+
+                $filePath = !empty($certFiles[$key])
+                    ? 'resources/docs/' . $certFiles[$key]
+                    : null;
+
+                $certificates[] = [
+                    'name' => $docName,
+                    'validity_date' => $certDates[$key] ?? null,
+                    'file' => $filePath,
+                ];
+            }
+
+            $resource->certificates = $certificates;
+            $resource->permits = [];
+
+            $resource->save();
+
+            // =========================
+            // SYNC WITH USER TABLE
+            // =========================
+            User::updateOrCreate(
+                ['mobile_number' => $row[1] ?? null],
+                [
+                    'name' => $row[0] ?? null,
+                    'role_id' => $row[3] ?? null,
+                    'status' => $row[4] ?? null,
+                    'address' => $row[5] ?? null,
+                ]
+            );
+
+            $this->created++;
         }
+    }
 
-        $resource->certificates = $certificates;
-        $resource->permits = [];
-
-        $resource->save();
-
-        return $resource;
+    public function getCreatedCount()
+    {
+        return $this->created;
     }
 }

@@ -71,10 +71,12 @@
                                                                                                                                                                                                                                                                             C14,7 12,5 9.5,5Z" />
                         </svg>
                     </div>
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_vehicle">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Vehicles
-                    </a>
+                    @if (auth()->user()->hasPermission('Tools & Equipments', 'is_create'))
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_vehicle">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Vehicles
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -93,24 +95,26 @@
                                         </label>
                                     </div>
 
-                                    <span data-bs-toggle="tooltip" title="Update">
-                                        <i class="mdi mdi-pencil-outline text-secondary me-1 cursor-pointer"
-                                            data-bs-toggle="modal" data-bs-target="#kt_modal_update_vehicle"
-                                            onclick="editVehicle(
-                                            '{{ $vehicle->id }}',
-                                            '{{ $vehicle->vehicle_name }}',
-                                            '{{ $vehicle->brand }}',
-                                            '{{ $vehicle->manufacturer }}',
-                                            '{{ $vehicle->model }}',
-                                            '{{ $vehicle->registered_number }}',
-                                            '{{ $vehicle->engine_number }}',
-                                            '{{ $vehicle->chasis_number }}',
-                                            '{{ $vehicle->current_location }}',
-                                            '{{ $vehicle->capacity }}',
-                                            '{{ $vehicle->length }}'
-                                        )">
-                                        </i>
-                                    </span>
+                                    @if (auth()->user()->hasPermission('Tools & Equipments', 'is_update'))
+                                        <span data-bs-toggle="tooltip" title="Update">
+                                            <i class="mdi mdi-pencil-outline text-secondary me-1 cursor-pointer"
+                                                data-bs-toggle="modal" data-bs-target="#kt_modal_update_vehicle"
+                                                onclick="editVehicle(
+                                                '{{ $vehicle->id }}',
+                                                '{{ $vehicle->vehicle_name }}',
+                                                '{{ $vehicle->brand }}',
+                                                '{{ $vehicle->manufacturer }}',
+                                                '{{ $vehicle->model }}',
+                                                '{{ $vehicle->registered_number }}',
+                                                '{{ $vehicle->engine_number }}',
+                                                '{{ $vehicle->chasis_number }}',
+                                                '{{ $vehicle->current_location }}',
+                                                '{{ $vehicle->capacity }}',
+                                                '{{ $vehicle->length }}'
+                                            )">
+                                            </i>
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <hr class="my-3">

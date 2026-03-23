@@ -91,7 +91,7 @@
                             setTimeout(() => {
                                 const form = document.createElement('form');
                                 form.method = 'POST';
-                                form.action = '/otp_screen';
+                                form.action = '{{ url('/otp_screen') }}';
 
                                 const csrfInput = document.createElement('input');
                                 csrfInput.type = 'hidden';

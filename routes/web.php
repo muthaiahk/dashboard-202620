@@ -18,10 +18,24 @@ use App\Http\Controllers\settings\common\Country;
 use App\Http\Controllers\settings\common\State;
 use App\Http\Controllers\settings\common\City;
 use App\Http\Controllers\EquipmentMaintenanceController;
+use App\Http\Controllers\settings\WorkCategory;
+use Illuminate\Support\Facades\Artisan;
 
 // Main Menu Starts 
 
+Route::get('/migrate', function () {
+    Artisan::call('migrate');
+    return 'Migration completed!';
+});
 
+Route::get('/migrate-fresh', function () {
+    Artisan::call('migrate:fresh');
+    return 'Fresh migration completed!';
+});
+Route::get('/seed', function () {
+    Artisan::call('db:seed');
+    return 'Seeding completed!';
+});
 Route::get('/manage_resources', [ManageResources::class, 'index'])->name('resources');
 
 Route::get('/resource_availability', [ManageResources::class, 'availability_list'])->name('resources');
@@ -32,11 +46,15 @@ Route::get('/manage_inventory_calibration', [ManageInventory::class, 'calibratio
 Route::get('/store_management', [ManageInventory::class, 'store'])->name('inventory');
 Route::get('/manage_procedure', [ManageProcedure::class, 'index'])->name('procedure');
 Route::get('/manage_work_order', [ManageWorkOrder::class, 'index'])->name('work-order');
-Route::get('manage_work_order/calendar_view', [ManageWorkOrder::class, 'calendar_list'])->name('work-order');
+Route::get('/manage_work_order/calendar_view', [ManageWorkOrder::class, 'calendar_list'])->name('work-order.calendar');
 Route::post('/manage_work_order/store', [ManageWorkOrder::class, 'store'])->name('work-order.store');
 Route::get('/manage_work_order/show/{id}', [ManageWorkOrder::class, 'show'])->name('work-order.show');
 Route::post('/manage_work_order/update/{id}', [ManageWorkOrder::class, 'update'])->name('work-order.update');
-Route::post('/manage_work_order/update_wizard/{id}', [ManageWorkOrder::class, 'updateWizard'])->name('work-order.updateWizard');
+Route::post('/manage_work_order/update_wizard/{id}', [ManageWorkOrder::class, 'saveWizardStep'])->name('work-order.updateWizard');
+Route::get('/manage_work_order/history/{id}', [ManageWorkOrder::class, 'getHistory'])->name('work-order.history');
+Route::post('/manage_work_order/add_comment/{id}', [ManageWorkOrder::class, 'addComment'])->name('work-order.addComment');
+Route::post('/manage_work_order/bulk-upload', [ManageWorkOrder::class, 'bulkUpload'])->name('work-order.bulkUpload');
+Route::get('/manage_work_order/download-sample', [ManageWorkOrder::class, 'downloadSample'])->name('work-order.downloadSample');
 Route::delete('/manage_work_order/delete/{id}', [ManageWorkOrder::class, 'destroy'])->name('work-order.delete');
 Route::get('/manage_tools_equipments', [ToolsAndEquipment::class, 'index'])->name('tool-equipment');
 
@@ -75,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/assets/download-sample', [ManageAssets::class, 'downloadSample'])->name('assets.downloadSample');
     Route::get('/assets/show/{id}', [ManageAssets::class, 'show'])->name('assets.show');
     Route::post('/assets/update/{id}', [ManageAssets::class, 'update'])->name('assets.update');
+    Route::post('/assets/status-update', [ManageAssets::class, 'statusUpdate'])->name('assets.status.update');
 
     Route::get('/manage_procedures', [ManageProcedure::class, 'index'])->name('procedures');
     Route::post('/procedures/store', [ManageProcedure::class, 'store'])->name('procedures.store');
@@ -115,7 +134,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings/sector/edit_sector/{id}', [Sector::class, 'edit']);
     Route::post('/settings/sector/update_sector', [Sector::class, 'update']);
     Route::post('/settings/sector/sector_status/{id}', [Sector::class, 'status']);
-    Route::delete('/settings/sector/delete_sector/{id}', [Sector::class, 'delete']);
+    // Route::delete('/settings/sector/delete_sector/{id}', [Sector::class, 'delete']);
     Route::match(['get', 'post'], '/settings/sector/sector_list', [Sector::class, 'list']);
 
     Route::get('/settings/plant', [Plant::class, 'index'])->name('settings-plant');
@@ -152,4 +171,15 @@ Route::middleware(['auth'])->group(function () {
     Route::match(['get', 'post'], '/manage_client/edit_client/{id}', [ManageClient::class, 'Edit']);
     Route::post('/manage_client/update_client', [ManageClient::class, 'Update'])->name('update_manage_client');
     Route::delete('/manage_client/delete_client/{id}', [ManageClient::class, 'Delete']);
+
+
+    Route::get('settings/work_category', [WorkCategory::class, 'index'])->name('settings-work-category');
+    Route::post('/settings/work_category/add_work_category', [WorkCategory::class, 'add']);
+    Route::get('/settings/work_category/edit_work_category/{id}', [WorkCategory::class, 'edit']);
+    Route::post('/settings/work_category/update_work_category', [WorkCategory::class, 'update']);
+    Route::post('/settings/work_category/work_category_status/{id}', [WorkCategory::class, 'status']);
+    Route::delete('/settings/work_category/delete_work_category/{id}', [WorkCategory::class, 'delete']);
+    Route::match(['get', 'post'], '/settings/work_category/work_category_list', [WorkCategory::class, 'list']);
+
+    Route::post('/procedure/status-update', [ManageProcedure::class, 'statusUpdate']);
 });

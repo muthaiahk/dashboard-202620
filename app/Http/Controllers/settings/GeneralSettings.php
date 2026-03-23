@@ -13,7 +13,13 @@ use Illuminate\Support\Facades\Http;
 
 class GeneralSettings extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:General Settings,is_read')->only('index');
+        $this->middleware('permission:General Settings,is_update')->only('Add');
+    }
+
+    public function index()
   {
     $general_data = GeneralSettingsModel::where('status', 0)->first();
     // return $general_data;

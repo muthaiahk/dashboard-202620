@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class Inventory extends BaseModel
 {
     use HasFactory;
 
@@ -20,7 +20,7 @@ class Inventory extends Model
     public function workOrders()
     {
         return $this->belongsToMany(WorkOrder::class, 'work_order_inventory', 'inventory_id', 'work_order_id')
-                    ->withPivot('quantity_used')
-                    ->withTimestamps();
+            ->withPivot('quantity_used')
+            ->withTimestamps();
     }
 }

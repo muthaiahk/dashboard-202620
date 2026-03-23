@@ -146,22 +146,24 @@
                         viewBox="0 0 24 24">
                         <path
                             d="M9.5,3A6.5,6.5 0 0,1 16,9.5
-                                                                                                                                                                                                                                    C16,11.11 15.41,12.59 14.44,13.73
-                                                                                                                                                                                                                                    L14.71,14H15.5L20.5,19L19,20.5
-                                                                                                                                                                                                                                    L14,15.5V14.71L13.73,14.44
-                                                                                                                                                                                                                                    C12.59,15.41 11.11,16
-                                                                                                                                                                                                                                    9.5,16A6.5,6.5 0 0,1 3,9.5
-                                                                                                                                                                                                                                    A6.5,6.5 0 0,1 9.5,3
-                                                                                                                                                                                                                                    M9.5,5C7,5 5,7 5,9.5
-                                                                                                                                                                                                                                    C5,12 7,14 9.5,14
-                                                                                                                                                                                                                                    C12,14 14,12 14,9.5
-                                                                                                                                                                                                                                    C14,7 12,5 9.5,5Z" />
+                                                                                                                                                                                                                                                                    C16,11.11 15.41,12.59 14.44,13.73
+                                                                                                                                                                                                                                                                    L14.71,14H15.5L20.5,19L19,20.5
+                                                                                                                                                                                                                                                                    L14,15.5V14.71L13.73,14.44
+                                                                                                                                                                                                                                                                    C12.59,15.41 11.11,16
+                                                                                                                                                                                                                                                                    9.5,16A6.5,6.5 0 0,1 3,9.5
+                                                                                                                                                                                                                                                                    A6.5,6.5 0 0,1 9.5,3
+                                                                                                                                                                                                                                                                    M9.5,5C7,5 5,7 5,9.5
+                                                                                                                                                                                                                                                                    C5,12 7,14 9.5,14
+                                                                                                                                                                                                                                                                    C12,14 14,12 14,9.5
+                                                                                                                                                                                                                                                                    C14,7 12,5 9.5,5Z" />
                     </svg>
                 </div>
-                <a href="javascript:;" target="_blank" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#kt_modal_add_role">
-                    <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Role
-                </a>
+                @if (auth()->user()->hasPermission('Roles & Permissions', 'is_create'))
+                    <a href="javascript:;" target="_blank" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#kt_modal_add_role">
+                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Role
+                    </a>
+                @endif
             </div>
         </div>
         <div class="card-body">
@@ -179,16 +181,24 @@
                                                 <div class="text-black">{{ $role->name }}</div>
                                                 <div class="role-users">{{ $role->users->count() ?? 0 }} Users</div>
                                                 <div class="role-actions ">
-                                                    <a href="javascript:;" class="edit-role-btn"
-                                                        data-id="{{ $role->id }}" data-name="{{ $role->name }}"
-                                                        data-description="{{ $role->description }}" data-bs-toggle="modal"
-                                                        data-bs-target="#kt_modal_update_role"><i
-                                                            class="mdi mdi-pencil-outline"></i> Edit</a>
-                                                    <span class="text-dark">|</span>
-                                                    <a href="javascript:;" class="delete-role-btn delete"
-                                                        data-id="{{ $role->id }}" data-name="{{ $role->name }}"
-                                                        data-bs-toggle="modal" data-bs-target="#kt_modal_delete_role"><i
-                                                            class="mdi mdi-trash-can-outline"></i> Delete</a>
+                                                    @if (auth()->user()->hasPermission('Roles & Permissions', 'is_update'))
+                                                        <a href="javascript:;" class="edit-role-btn"
+                                                            data-id="{{ $role->id }}" data-name="{{ $role->name }}"
+                                                            data-description="{{ $role->description }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#kt_modal_update_role"><i
+                                                                class="mdi mdi-pencil-outline"></i> Edit</a>
+                                                    @endif
+                                                    @if (auth()->user()->hasPermission('Roles & Permissions', 'is_update') && auth()->user()->hasPermission('Roles & Permissions', 'is_delete'))
+                                                        <span class="text-dark">|</span>
+                                                    @endif
+                                                    @if (auth()->user()->hasPermission('Roles & Permissions', 'is_delete'))
+                                                        <a href="javascript:;" class="delete-role-btn delete"
+                                                            data-id="{{ $role->id }}" data-name="{{ $role->name }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#kt_modal_delete_role"><i
+                                                                class="mdi mdi-trash-can-outline"></i> Delete</a>
+                                                    @endif
                                                 </div>
                                             </div>
 
@@ -276,7 +286,7 @@
                         <input type="hidden" id="delete_role_id">
                         <label class="text-danger" id="delete_role_name"></label>
                         <!-- <span class="ms-2 me-2">-</span>
-                                                                                                                                                                                                                          <label>2024/MDU/MU0001</label> -->
+                                                                                                                                                                                                                                                          <label>2024/MDU/MU0001</label> -->
                     </div>
                 </div>
                 <div class="d-flex justify-content-center align-items-center gap-3 pt-8">
@@ -347,32 +357,19 @@
     <!--end::Modal - Add Roles & Permission-->
 
 
-    <!--begin::Modal - Add Audit Trail-->
     <div class="modal fade" id="kt_modal_user_log" tabindex="-1" aria-hidden="true" data-bs-keyboard="false"
         data-bs-backdrop="static" data-bs-focus="false">
-        <!--begin::Modal dialog-->
         <div class="modal-dialog modal-lg">
-            <!--begin::Modal content-->
             <div class="modal-content rounded">
-                <!--begin::Modal header-->
                 <div class="modal-header d-flex align-items-center justify-content-between pb-0 border-bottom">
                     <h4 class="text-center text-black">Audit Trail</h4>
-                    <!--begin::Close-->
                     <div class="btn btn-sm btn-icon btn-active-color-primary mb-4" data-bs-dismiss="modal">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-                                transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                transform="rotate(45 7.41422 6)" fill="currentColor" />
-                        </svg>
-                        <!--end::Svg Icon-->
+                        <!-- SVG Close Icon -->
                     </div>
-                    <!--end::Close-->
                 </div>
-                <!--end::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body py-5 px-10 px-xl-20">
+
+                <!-- Modal body with scrollable table -->
+                <div class="modal-body py-5 px-10 px-xl-20" style="max-height: 500px; overflow-y: auto;">
                     <div class="row">
                         <div class="col-lg-12 table-wrapper mt-2">
                             <table class="table align-middle table-row-dashed table-hover gy-0 gs-1 list_page">
@@ -380,173 +377,46 @@
                                     <tr class="text-center align-top fw-bold fs-6 gs-0 bg-gray-200">
                                         <th class="min-w-100px text-black">Role</th>
                                         <th class="min-w-100px text-black">Module</th>
-                                        <th class="min-w-100px text-black">Update At</th>
-                                        <th class="min-w-100px text-black">Update by</th>
+                                        <th class="min-w-100px text-black">Updated At</th>
+                                        <th class="min-w-100px text-black">Updated By</th>
                                         <th class="min-w-100px text-black">Details</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-black fw-semibold fs-7">
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Supervisor</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">Manage Customer Asset</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">15-Mar-2026</label>
-                                                <label class="fs-8 text-danger">02:06 PM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_1.png') }}">
-                                                <label class="fw-medium fs-7">John Smith</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Create Asset permission
-                                                removed</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Technician</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">Manage Work Order</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">16-Mar-2026</label>
-                                                <label class="fs-8 text-danger">10:15 AM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_1.png') }}">
-                                                <label class="fw-medium fs-7">David Lee</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Work Order access granted</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Engineer</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">Manage Inventory</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">16-Mar-2026</label>
-                                                <label class="fs-8 text-danger">01:40 PM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_2.png') }}">
-                                                <label class="fw-medium fs-7">Sarah Khan</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Inventory edit permission
-                                                updated</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Admin</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">User Management</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">17-Mar-2026</label>
-                                                <label class="fs-8 text-danger">11:25 AM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_1.png') }}">
-                                                <label class="fw-medium fs-7">Michael Brown</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Role changed from Technician to
-                                                Supervisor</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Supervisor</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">Reports</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">17-Mar-2026</label>
-                                                <label class="fs-8 text-danger">04:50 PM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_2.png') }}">
-                                                <label class="fw-medium fs-7">Emma Watson</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Report download permission
-                                                added</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label class="fw-medium fs-7">Technician</label>
-                                        </td>
-                                        <td>
-                                            <label class="fw-medium fs-7">Tools & Equipment</label>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <label class="fw-medium fs-7">18-Mar-2026</label>
-                                                <label class="fs-8 text-danger">09:10 AM</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <img class="rounded-circle w-45px h-45px"
-                                                    src="{{ asset('assets/images/auth/user_1.png') }}">
-                                                <label class="fw-medium fs-7">Chris Evans</label>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <label class="text-black fw-medium fs-7">Equipment access revoked</label>
-                                        </td>
-                                    </tr>
+                                    @foreach ($trails as $trail)
+                                        <tr>
+                                            <td><label class="fw-medium fs-7">{{ $trail->role }}</label></td>
+                                            <td><label class="fw-medium fs-7">{{ $trail->module }}</label></td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <label
+                                                        class="fw-medium fs-7">{{ $trail->updated_at->format('d-M-Y') }}</label>
+                                                    <label
+                                                        class="fs-8 text-danger">{{ $trail->updated_at->format('h:i A') }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <img class="rounded-circle w-45px h-45px"
+                                                        src="{{ asset('assets/images/auth/user_1.png') }}">
+                                                    <label
+                                                        class="fw-medium fs-7">{{ $trail->user ? $trail->user->name : 'System' }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <label class="text-black fw-medium fs-7">{{ $trail->details }}</label>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - Add Audit Trail-->
 
+            </div>
+        </div>
+    </div>
 
     <!--begin::Modal - Update Roles & Permission-->
     <div class="modal fade" id="kt_modal_update_role" tabindex="-1" aria-hidden="true" data-bs-keyboard="false"
@@ -704,6 +574,11 @@
 
         });
         $(document).on('click', '.permission-badge', function() {
+
+            @if (!auth()->user()->hasPermission('Roles & Permissions', 'is_update'))
+                toastr.error("You do not have permission to update permissions");
+                return;
+            @endif
 
             let el = $(this);
 

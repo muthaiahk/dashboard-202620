@@ -71,10 +71,12 @@
                                                                                                                                                                                                                                                                             C14,7 12,5 9.5,5Z" />
                         </svg>
                     </div>
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_equipments">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Equipment
-                    </a>
+                    @if (auth()->user()->hasPermission('Tools & Equipments', 'is_create'))
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_equipments">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Equipment
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -97,20 +99,22 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
-                                        <i class="mdi mdi-pencil-outline text-secondary me-1 cursor-pointer"
-                                            data-bs-toggle="modal" data-bs-target="#kt_modal_update_equipments"
-                                            data-id="{{ $equipment->id }}" data-name="{{ $equipment->equipment_name }}"
-                                            data-category="{{ $equipment->category }}"
-                                            data-serial="{{ $equipment->serial_number }}"
-                                            data-manufacturer="{{ $equipment->manufacturer }}"
-                                            data-model="{{ $equipment->model }}"
-                                            data-ownership="{{ $equipment->ownership }}"
-                                            data-status="{{ $equipment->current_status }}"
-                                            data-location="{{ $equipment->current_location }}"
-                                            data-certificate="{{ $equipment->certificate }}"
-                                            data-expiry="{{ $equipment->expiry_date }}"></i>
-                                    </span>
+                                    @if (auth()->user()->hasPermission('Tools & Equipments', 'is_update'))
+                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
+                                            <i class="mdi mdi-pencil-outline text-secondary me-1 cursor-pointer"
+                                                data-bs-toggle="modal" data-bs-target="#kt_modal_update_equipments"
+                                                data-id="{{ $equipment->id }}" data-name="{{ $equipment->equipment_name }}"
+                                                data-category="{{ $equipment->category }}"
+                                                data-serial="{{ $equipment->serial_number }}"
+                                                data-manufacturer="{{ $equipment->manufacturer }}"
+                                                data-model="{{ $equipment->model }}"
+                                                data-ownership="{{ $equipment->ownership }}"
+                                                data-status="{{ $equipment->current_status }}"
+                                                data-location="{{ $equipment->current_location }}"
+                                                data-certificate="{{ $equipment->certificate }}"
+                                                data-expiry="{{ $equipment->expiry_date }}"></i>
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <hr class="my-3">

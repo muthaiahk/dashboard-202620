@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('work_orders', function (Blueprint $table) {
-            $table->json('wizard_data')->nullable();
+        Schema::table('wo_preparations', function (Blueprint $table) {
+            $table->json('pre_checklist')->after('pre_loto_applied')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('work_orders', function (Blueprint $table) {
-            $table->dropColumn('wizard_data');
+        Schema::table('wo_preparations', function (Blueprint $table) {
+            $table->dropColumn('pre_checklist');
         });
     }
 };

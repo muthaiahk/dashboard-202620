@@ -12,6 +12,13 @@ use App\Models\RoomModel;
 
 class ManageAssets extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:Manage Customer Asset,is_read')->only(['index', 'show', 'downloadSample']);
+        $this->middleware('permission:Manage Customer Asset,is_create')->only(['store', 'bulkUpload']);
+        $this->middleware('permission:Manage Customer Asset,is_update')->only(['update', 'statusUpdate']);
+    }
+
     public function index()
     {
         $assets = Asset::with(['client', 'sector', 'plant', 'room'])->orderBy('id', 'desc')->get();
@@ -22,7 +29,22 @@ class ManageAssets extends Controller
 
         return view('content.manage_asset.asset_panel_list', compact('assets', 'clients', 'sectors', 'plants', 'rooms'));
     }
+    public function statusUpdate(Request $request)
+    {
+        $assets = Asset::find($request->id);
 
+        if (!$assets) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $assets->status = $request->status;
+        $assets->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $assets->status
+        ]);
+    }
     public function store(Request $request)
     {
         $request->validate([

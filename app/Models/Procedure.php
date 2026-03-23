@@ -5,14 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Procedure extends Model
+class Procedure extends BaseModel
 {
     use HasFactory;
 
     protected $fillable = [
-        'title', 'procedure_code', 'description', 'asset_type',
-        'work_category', 'steps', 'pre_checklist', 'post_checklist',
-        'required_tools', 'status'
+        'title',
+        'procedure_code',
+        'description',
+        'asset_type',
+        'work_category',
+        'steps',
+        'pre_checklist',
+        'post_checklist',
+        'required_tools',
+        'status'
     ];
 
     protected $casts = [

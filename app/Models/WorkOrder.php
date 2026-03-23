@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WorkOrder extends Model
+class WorkOrder extends BaseModel
 {
     use HasFactory;
 
@@ -38,6 +38,8 @@ class WorkOrder extends Model
         'recurrence',
         'scaff_crane',
         'wizard_data',
+        'wizard_current_step',
+        'wizard_status',
     ];
 
     protected $casts = [
@@ -72,7 +74,58 @@ class WorkOrder extends Model
     public function inventories()
     {
         return $this->belongsToMany(Inventory::class, 'work_order_inventory', 'work_order_id', 'inventory_id')
-                    ->withPivot('quantity_used')
-                    ->withTimestamps();
+            ->withPivot('quantity_used')
+            ->withTimestamps();
+    }
+
+    public function inspection()
+    {
+        return $this->hasOne(WoInspection::class, 'workorder_id');
+    }
+
+    public function validation()
+    {
+        return $this->hasOne(Validation::class, 'workorder_id');
+    }
+
+    public function preparation()
+    {
+        return $this->hasOne(WoPreparation::class, 'workorder_id');
+    }
+
+    public function approval()
+    {
+        return $this->hasOne(WoApproval::class, 'workorder_id');
+    }
+
+    public function execution()
+    {
+        return $this->hasOne(WoExecution::class, 'workorder_id');
+    }
+
+    public function closure()
+    {
+        return $this->hasOne(WorkorderClosure::class, 'workorder_id');
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(WorkOrderHistory::class);
+    }
+
+    /**
+     * Get the related model data for a given wizard step index.
+     */
+    public function getStepRelation($step)
+    {
+        $map = [
+            0 => 'inspection',
+            1 => 'validation',
+            2 => 'preparation',
+            3 => 'approval',
+            4 => 'execution',
+            5 => 'closure',
+        ];
+        return $map[$step] ?? null;
     }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GeneralSettingsModel extends Model
+class GeneralSettingsModel extends BaseModel
 {
     use HasFactory;
     public $table      = "general_settings";

@@ -106,13 +106,16 @@
                               <label class="">QE Calibration Facility</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class="badge bg-label-warning fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Under Calibration <span class="mdi mdi-chevron-down"></span>
-
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:;" class="dropdown-item">Return To Store</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class="badge bg-label-warning fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Under Calibration <span class="mdi mdi-chevron-down"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:;" class="dropdown-item">Return To Store</a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-label-warning fs-7 fw-semibold text-black">Under Calibration</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">
@@ -135,15 +138,19 @@
                               <label class="">Main Production Unit</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class="badge bg-label-success fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Return to Store <span class="mdi mdi-chevron-down"></span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:;" class="dropdown-item">Sent to Calibration</a>
-                                    <a href="javascript:;" class="dropdown-item">NCR</a>
-                                    <a href="javascript:;" class="dropdown-item">Calibration Completed</a>
-                                    <a href="javascript:;" class="dropdown-item">Under Calibration</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class="badge bg-label-success fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Return to Store <span class="mdi mdi-chevron-down"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:;" class="dropdown-item">Sent to Calibration</a>
+                                        <a href="javascript:;" class="dropdown-item">NCR</a>
+                                        <a href="javascript:;" class="dropdown-item">Calibration Completed</a>
+                                        <a href="javascript:;" class="dropdown-item">Under Calibration</a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-label-success fs-7 fw-semibold text-black">Return to Store</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">
@@ -166,14 +173,18 @@
                               <label class="">Storage Tank Area</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class=" badge bg-label-primary fs-7  fw-semibold " style="color:black;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Calibration Completed <span class="mdi mdi-chevron-down"></span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">                                   
-                                    <a href="javascript:;" class="dropdown-item">Under Calibration</a>
-                                    <a href="javascript:;" class="dropdown-item">Return To Store</a>
-                                    <a href="javascript:;" class="dropdown-item">Rework</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class=" badge bg-label-primary fs-7  fw-semibold " style="color:black;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Calibration Completed <span class="mdi mdi-chevron-down"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">                                   
+                                        <a href="javascript:;" class="dropdown-item">Under Calibration</a>
+                                        <a href="javascript:;" class="dropdown-item">Return To Store</a>
+                                        <a href="javascript:;" class="dropdown-item">Rework</a>
+                                    </div>
+                                @else
+                                    <span class=" badge bg-label-primary fs-7  fw-semibold " style="color:black;">Calibration Completed</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">
@@ -196,13 +207,16 @@
                               <label class="">Assembly Line 2</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class="badge bg-label-info fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sent to Calibration <span class="mdi mdi-chevron-down"></span>
-
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:;" class="dropdown-item">Return To Store</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class="badge bg-label-info fs-7 fw-semibold text-black" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Sent to Calibration <span class="mdi mdi-chevron-down"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:;" class="dropdown-item">Return To Store</a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-label-info fs-7 fw-semibold text-black">Sent to Calibration</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">
@@ -225,13 +239,17 @@
                                 <label>Assembly Line 1</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class="badge bg-dark fs-7 fw-semibold text-white" data-bs-toggle="dropdown">
-                                    Rework <span class="mdi mdi-chevron-down text-white"></span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:;" class="dropdown-item">Send to Calibration</a>
-                                    <a href="javascript:;" class="dropdown-item">Return To Store</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class="badge bg-dark fs-7 fw-semibold text-white" data-bs-toggle="dropdown">
+                                        Rework <span class="mdi mdi-chevron-down text-white"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:;" class="dropdown-item">Send to Calibration</a>
+                                        <a href="javascript:;" class="dropdown-item">Return To Store</a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-dark fs-7 fw-semibold text-white">Rework</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">
@@ -254,12 +272,16 @@
                                 <label>QA Inspection Bay</label>
                             </td>
                             <td>
-                                <a href="javascript:;" class="badge bg-label-danger fs-7 fw-semibold text-black" data-bs-toggle="dropdown">
-                                    NCR <span class="mdi mdi-chevron-down"></span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:;" class="dropdown-item">Send to Rework</a>
-                                </div>
+                                @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                    <a href="javascript:;" class="badge bg-label-danger fs-7 fw-semibold text-black" data-bs-toggle="dropdown">
+                                        NCR <span class="mdi mdi-chevron-down"></span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:;" class="dropdown-item">Send to Rework</a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-label-danger fs-7 fw-semibold text-black">NCR</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="text-end">

@@ -45,10 +45,12 @@
                     <!-- <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
                             <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
                         </a> -->
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_client">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Client
-                    </a>
+                    @if (auth()->user()->hasPermission('Manage Client', 'is_create'))
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_client">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Client
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -86,24 +88,30 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <a class="btn btn-icon btn-sm p-0 me-2" id="" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="mdi mdi-dots-vertical fs-3 text-black"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="javascript:;" class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#kt_modal_edit_client"
-                                            onclick="edit_client_details('{{ $encryptedValue }}')">
-                                            <span><i class="mdi mdi-pencil-outline fs-3 text-black me-1"></i></span>
-                                            <span>Edit</span>
+                                    @if (auth()->user()->hasPermission('Manage Client', 'is_update') || auth()->user()->hasPermission('Manage Client', 'is_delete'))
+                                        <a class="btn btn-icon btn-sm p-0 me-2" id="" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="mdi mdi-dots-vertical fs-3 text-black"></i>
                                         </a>
-                                        <a href="javascript:;" class="dropdown-item" data-bs-toggle="modal"
-                                            data-bs-target="#kt_modal_delete_client"
-                                            onclick="deleteFetch('{{ $encryptedValue }}', '{{ $list->company_name }}')">
-                                            <span><i class="mdi mdi-trash-can-outline fs-3 text-black me-1"></i></span>
-                                            <span>Delete</span>
-                                        </a>
-                                    </div>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            @if (auth()->user()->hasPermission('Manage Client', 'is_update'))
+                                                <a href="javascript:;" class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#kt_modal_edit_client"
+                                                    onclick="edit_client_details('{{ $encryptedValue }}')">
+                                                    <span><i class="mdi mdi-pencil-outline fs-3 text-black me-1"></i></span>
+                                                    <span>Edit</span>
+                                                </a>
+                                            @endif
+                                            @if (auth()->user()->hasPermission('Manage Client', 'is_delete'))
+                                                <a href="javascript:;" class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#kt_modal_delete_client"
+                                                    onclick="deleteFetch('{{ $encryptedValue }}', '{{ $list->company_name }}')">
+                                                    <span><i class="mdi mdi-trash-can-outline fs-3 text-black me-1"></i></span>
+                                                    <span>Delete</span>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                                 <hr>
                                 <div class="d-flex flex-column gap-1">

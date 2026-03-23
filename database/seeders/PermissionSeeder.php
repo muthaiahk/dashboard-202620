@@ -11,14 +11,20 @@ class PermissionSeeder extends Seeder
     {
         $modules = [
             'Dashboard',
+            'Client Dashboard',
             'Manage Customer Asset',
             'Manage Work Order',
             'Manage Inventory',
             'Manage Procedure',
             'Manage Resources',
-            'Tools & Equipment',
+            'Tools & Equipments',
             'Roles & Permissions',
             'Manage Client',
+            'General Settings',
+            'Sector',
+            'Plant',
+            'Room',
+            'Work Category',
         ];
 
         foreach ($modules as $module) {

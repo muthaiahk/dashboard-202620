@@ -9,7 +9,14 @@ use App\Models\Vehicle;
 
 class ToolsAndEquipment extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Tools & Equipments,is_read')->only(['index', 'vehicle_list']);
+        $this->middleware('permission:Tools & Equipments,is_create')->only(['store', 'store_vehicle']);
+        $this->middleware('permission:Tools & Equipments,is_update')->only(['update', 'update_vehicle']);
+    }
+
+    public function index()
   {
     // Fetch all equipments
     $equipments = Equipment::all();

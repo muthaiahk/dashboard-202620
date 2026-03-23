@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CityModel extends Model
+class CityModel extends BaseModel
 {
     use HasFactory;
     public $table      = "cities";

@@ -36,7 +36,9 @@
                 </nav>
             </div>
             <div class="d-flex justify-content-end align-items-center">
-                <button type="button" class="btn btn-primary" onclick="AddvalidateForm_topics()">Update</button>
+                @if (auth()->user()->hasPermission('General Settings', 'is_update'))
+                    <button type="button" class="btn btn-primary" onclick="AddvalidateForm_topics()">Update</button>
+                @endif
             </div>
         </div>
         <div class="card-body mx-1 my-0 py-0">

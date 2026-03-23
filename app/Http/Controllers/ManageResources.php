@@ -12,10 +12,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\Team;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class ManageResources extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Manage Resources,is_read')->only(['index', 'show', 'team_list', 'getUsers', 'team_show', 'availability_list']);
+        $this->middleware('permission:Manage Resources,is_create')->only(['store', 'bulkUpload', 'storeTeam']);
+        $this->middleware('permission:Manage Resources,is_update')->only(['update', 'team_update']);
+        $this->middleware('permission:Manage Resources,is_delete')->only('team_delete');
+    }
+
+    public function index()
   {
     $roles = Role::where('status', 1)->get();
 
@@ -27,8 +36,8 @@ class ManageResources extends Controller
   {
     $request->validate([
       'name' => 'required',
-      'mobile_number' => 'required',
-      'email' => 'required',
+      'mobile_number' => 'required|digits:10|unique:users,mobile_number',
+      'email' => 'required|email',
       'role_id' => 'required',
       'status' => 'required',
     ]);
@@ -82,6 +91,19 @@ class ManageResources extends Controller
     // =========================
     $resource->save();
 
+    // =========================
+    // 4. SYNC WITH USER TABLE (FOR LOGIN)
+    // =========================
+    User::updateOrCreate(
+      ['mobile_number' => $request->mobile_number],
+      [
+        'name' => $request->name,
+        'role_id' => $request->role_id,
+        'status' => $request->status,
+        'address' => $request->address,
+      ]
+    );
+
     return response()->json([
       'status' => true,
       'message' => 'Resource created successfully',
@@ -123,9 +145,24 @@ class ManageResources extends Controller
       ]);
     }
 
-    // ======================
-    // UPDATE BASIC DETAILS
-    // ======================
+    $request->validate([
+      'name' => 'required',
+      'mobile_number' => 'required|digits:10',
+      'email' => 'required|email',
+      'role_id' => 'required',
+      'status' => 'required',
+    ]);
+
+    // Check if mobile number is taken by ANOTHER user
+    $existingUser = User::where('mobile_number', $request->mobile_number)->first();
+    if ($existingUser && $existingUser->mobile_number !== $resource->mobile_number) {
+      return response()->json([
+        'status' => false,
+        'message' => 'Mobile number already registered for another user'
+      ]);
+    }
+
+    $oldMobile = $resource->mobile_number;
     $resource->name = $request->name;
     $resource->mobile_number = $request->mobile_number;
     $resource->email = $request->email;
@@ -162,6 +199,31 @@ class ManageResources extends Controller
 
     $resource->save();
 
+    // ======================
+    // SYNC WITH USER TABLE
+    // ======================
+    // If mobile changed, we find by old mobile, otherwise updateOrCreate by new one
+    $user = User::where('mobile_number', $oldMobile)->first();
+    if ($user) {
+      $user->update([
+        'name' => $request->name,
+        'mobile_number' => $request->mobile_number,
+        'role_id' => $request->role_id,
+        'status' => $request->status,
+        'address' => $request->address,
+      ]);
+    } else {
+      User::updateOrCreate(
+        ['mobile_number' => $request->mobile_number],
+        [
+          'name' => $request->name,
+          'role_id' => $request->role_id,
+          'status' => $request->status,
+          'address' => $request->address,
+        ]
+      );
+    }
+
     return response()->json([
       'status' => true,
       'message' => 'Resource updated successfully',
@@ -172,51 +234,15 @@ class ManageResources extends Controller
   public function bulkUpload(Request $request)
   {
     try {
+      $import = new ResourceImport();
 
-      $rows = \Maatwebsite\Excel\Facades\Excel::toArray([], $request->file('file'))[0];
-
-      $created = 0;
-
-      foreach ($rows as $index => $row) {
-
-        if ($index == 0) continue;
-
-        // ❌ ROLE VALIDATION (STOP ERROR)
-        if (!\App\Models\Role::find($row[3])) {
-          return response()->json([
-            'status' => false,
-            'message' => "Invalid role_id '{$row[3]}' at row " . ($index + 1)
-          ]);
-        }
-
-        try {
-
-          \App\Models\ResourceModel::create([
-            'name' => $row[0],
-            'mobile_number' => $row[1],
-            'email' => $row[2],
-            'role_id' => $row[3],
-            'status' => $row[4],
-            'address' => $row[5],
-          ]);
-
-          $created++;
-        } catch (\Exception $e) {
-
-          return response()->json([
-            'status' => false,
-            'message' => $this->cleanSqlError($e->getMessage()) .
-              " at row " . ($index + 1)
-          ]);
-        }
-      }
+      Excel::import($import, $request->file('file'));
 
       return response()->json([
         'status' => true,
-        'message' => "Upload completed. Created: $created"
+        'message' => "Upload completed. Created: " . $import->getCreatedCount()
       ]);
     } catch (\Exception $e) {
-
       return response()->json([
         'status' => false,
         'message' => $this->cleanSqlError($e->getMessage())
@@ -267,10 +293,10 @@ class ManageResources extends Controller
 
     $exclude = $request->input('exclude', []);
     if (!empty($exclude)) {
-        if (!is_array($exclude)) {
-             $exclude = [$exclude];
-        }
-        $query->whereNotIn('id', $exclude);
+      if (!is_array($exclude)) {
+        $exclude = [$exclude];
+      }
+      $query->whereNotIn('id', $exclude);
     }
 
     // Optional: limit results to prevent overload
@@ -306,31 +332,31 @@ class ManageResources extends Controller
     }
 
     $techId = is_array($request->technician_ids) ? $request->technician_ids[0] : $request->technician_ids;
-    
+
     // Create team
     try {
-        $team = Team::create([
-            'team_name'       => $request->team_name,
-            'supervisor_id'   => $request->supervisor_id,
-            'technician_id'   => $techId,
-            'driver_id'       => $request->driver_id,
-            'other_staff_ids' => $request->other_staff_ids,
-        ]);
+      $team = Team::create([
+        'team_name'       => $request->team_name,
+        'supervisor_id'   => $request->supervisor_id,
+        'technician_id'   => $techId,
+        'driver_id'       => $request->driver_id,
+        'other_staff_ids' => $request->other_staff_ids,
+      ]);
 
-        return response()->json([
-          'success' => true,
-          'message' => 'Team created successfully!',
-          'team'    => array_merge($team->toArray(), [
-                'supervisor_name' => ResourceModel::find($team->supervisor_id)->name ?? '',
-                'technician_name' => ResourceModel::find($team->technician_id)->name ?? '',
-                'driver_name' => ResourceModel::find($team->driver_id)->name ?? ''
-            ])
-        ]);
+      return response()->json([
+        'success' => true,
+        'message' => 'Team created successfully!',
+        'team'    => array_merge($team->toArray(), [
+          'supervisor_name' => ResourceModel::find($team->supervisor_id)->name ?? '',
+          'technician_name' => ResourceModel::find($team->technician_id)->name ?? '',
+          'driver_name' => ResourceModel::find($team->driver_id)->name ?? ''
+        ])
+      ]);
     } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Database error: ' . $e->getMessage()
-        ], 500);
+      return response()->json([
+        'success' => false,
+        'message' => 'Database error: ' . $e->getMessage()
+      ], 500);
     }
   }
   /*
@@ -386,9 +412,9 @@ class ManageResources extends Controller
       'status' => true,
       'message' => 'Team updated successfully',
       'data' => array_merge($team->toArray(), [
-          'supervisor_name' => ResourceModel::find($team->supervisor_id)->name ?? '',
-          'technician_name' => ResourceModel::find($team->technician_id)->name ?? '',
-          'driver_name' => ResourceModel::find($team->driver_id)->name ?? ''
+        'supervisor_name' => ResourceModel::find($team->supervisor_id)->name ?? '',
+        'technician_name' => ResourceModel::find($team->technician_id)->name ?? '',
+        'driver_name' => ResourceModel::find($team->driver_id)->name ?? ''
       ])
     ]);
   }

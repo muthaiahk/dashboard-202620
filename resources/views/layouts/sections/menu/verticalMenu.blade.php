@@ -27,6 +27,22 @@ $configData = Helper::appClasses();
 
   <ul class="menu-inner py-1">
     @foreach ($menuData[0]->menu as $menu)
+    @php
+      $isVisible = true;
+      if (isset($menu->submenu)) {
+        $isVisible = false;
+        foreach ($menu->submenu as $sub) {
+          if (auth()->user()->hasPermission($sub->name, 'is_read')) {
+            $isVisible = true;
+            break;
+          }
+        }
+      } elseif (isset($menu->name)) {
+        $isVisible = auth()->user()->hasPermission($menu->name, 'is_read');
+      }
+    @endphp
+
+    @if(!$isVisible) @continue @endif
 
     {{-- adding active and open class if child is active --}}
 

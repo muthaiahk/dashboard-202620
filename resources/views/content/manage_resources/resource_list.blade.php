@@ -190,26 +190,28 @@
                             viewBox="0 0 24 24">
                             <path
                                 d="M9.5,3A6.5,6.5 0 0,1 16,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                    C16,11.11 15.41,12.59 14.44,13.73
-                                                                                                                                                                                                                                                                                                                                                                                                                    L14.71,14H15.5L20.5,19L19,20.5
-                                                                                                                                                                                                                                                                                                                                                                                                                    L14,15.5V14.71L13.73,14.44
-                                                                                                                                                                                                                                                                                                                                                                                                                    C12.59,15.41 11.11,16
-                                                                                                                                                                                                                                                                                                                                                                                                                    9.5,16A6.5,6.5 0 0,1 3,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                    A6.5,6.5 0 0,1 9.5,3
-                                                                                                                                                                                                                                                                                                                                                                                                                    M9.5,5C7,5 5,7 5,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                    C5,12 7,14 9.5,14
-                                                                                                                                                                                                                                                                                                                                                                                                                    C12,14 14,12 14,9.5
-                                                                                                                                                                                                                                                                                                                                                                                                                    C14,7 12,5 9.5,5Z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                    C16,11.11 15.41,12.59 14.44,13.73
+                                                                                                                                                                                                                                                                                                                                                                                                                                    L14.71,14H15.5L20.5,19L19,20.5
+                                                                                                                                                                                                                                                                                                                                                                                                                                    L14,15.5V14.71L13.73,14.44
+                                                                                                                                                                                                                                                                                                                                                                                                                                    C12.59,15.41 11.11,16
+                                                                                                                                                                                                                                                                                                                                                                                                                                    9.5,16A6.5,6.5 0 0,1 3,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                                    A6.5,6.5 0 0,1 9.5,3
+                                                                                                                                                                                                                                                                                                                                                                                                                                    M9.5,5C7,5 5,7 5,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                                    C5,12 7,14 9.5,14
+                                                                                                                                                                                                                                                                                                                                                                                                                                    C12,14 14,12 14,9.5
+                                                                                                                                                                                                                                                                                                                                                                                                                                    C14,7 12,5 9.5,5Z" />
                         </svg>
                     </div>
-                    <a href="javascript:void(0)" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#bulkUploadModal">
-                        <i class="mdi mdi-tray-arrow-up"></i> Bulk Upload
-                    </a>
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_add_resources">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Resources
-                    </a>
+                    @if (auth()->user()->hasPermission('Manage Resources', 'is_create'))
+                        <a href="javascript:void(0)" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#bulkUploadModal">
+                            <i class="mdi mdi-tray-arrow-up"></i> Bulk Upload
+                        </a>
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_resources">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Resources
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -287,15 +289,19 @@
                         <div class="card-footer border-top text-center d-flex justify-content-center gap-2">
 
                             <!-- EDIT -->
-                            <a href="javascript:;" class="btn-manage editResourceBtn" data-id="{{ $resource->id }}">
-                                <i class="mdi mdi-pencil-outline"></i> Edit
-                            </a>
+                            @if (auth()->user()->hasPermission('Manage Resources', 'is_update'))
+                                <a href="javascript:;" class="btn-manage editResourceBtn" data-id="{{ $resource->id }}">
+                                    <i class="mdi mdi-pencil-outline"></i> Edit
+                                </a>
+                            @endif
 
                             <!-- DELETE -->
-                            <a href="javascript:;" class="btn-manage text-danger deleteResourceBtn"
-                                data-id="{{ $resource->id }}">
-                                <i class="mdi mdi-trash-can-outline"></i> Delete
-                            </a>
+                            @if (auth()->user()->hasPermission('Manage Resources', 'is_delete'))
+                                <a href="javascript:;" class="btn-manage text-danger deleteResourceBtn"
+                                    data-id="{{ $resource->id }}">
+                                    <i class="mdi mdi-trash-can-outline"></i> Delete
+                                </a>
+                            @endif
 
                         </div>
 
@@ -484,7 +490,7 @@
 
                 <!-- FOOTER -->
                 <div class="modal-footer pt-5">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAndRefresh()">Cancel</button>
                     <button class="btn btn-primary" id="submit_resource">Create Resource</button>
                 </div>
 
@@ -798,31 +804,38 @@
 
                 // DOCUMENT VALIDATION
                 $(".document-row").each(function() {
+                    let row = $(this);
+                    let dName = row.find("input[name='doc_name[]']").val().trim();
+                    let dDate = row.find("input[name='doc_date[]']").val().trim();
+                    let fileInput = row.find("input[name='doc_file[]']")[0];
+                    let dFileLength = fileInput?.files?.length || 0;
 
-                    let dName = $(this).find("input[name='doc_name[]']").val().trim();
-                    let dDate = $(this).find("input[name='doc_date[]']").val().trim();
-                    let dFileLength = $(this).find("input[name='doc_file[]']")[0].files.length;
+                    row.find(".doc-name-error").html("");
+                    row.find(".doc-date-error").html("");
+                    row.find(".doc-file-error").html("");
 
-                    if (dName === "" && dDate === "" && dFileLength === 0) {
-                        return; // Skip completely empty rows
+                    // Only validate if any field is filled OR enforce all required
+                    if (!dName && !dDate && dFileLength === 0) {
+                        valid = false;
+                        row.find(".doc-name-error").html("Document Name is required");
+                        row.find(".doc-date-error").html("Validity Date is required");
+                        row.find(".doc-file-error").html("Attachment is required");
+                        return;
                     }
 
-                    if (dName === "") {
-                        $(this).find(".doc-name-error").html("Required");
+                    if (!dName) {
+                        row.find(".doc-name-error").html("Document Name is required");
                         valid = false;
                     }
-
-                    if (dDate === "") {
-                        $(this).find(".doc-date-error").html("Required");
+                    if (!dDate) {
+                        row.find(".doc-date-error").html("Validity Date is required");
                         valid = false;
                     }
-
                     if (dFileLength === 0) {
-                        $(this).find(".doc-file-error").html("Required");
+                        row.find(".doc-file-error").html("Attachment is required");
                         valid = false;
                     }
                 });
-
                 if (!valid) return;
 
                 let formData = new FormData();
@@ -1049,15 +1062,15 @@
                             </div>
 
                             ${doc.file ? `
-                                    <div class="mt-2 mb-2 d-flex justify-content-center gap-2" style="position:relative; z-index:10;">
-                                        <a href="/${doc.file}" target="_blank" class="btn btn-sm btn-outline-primary px-2 py-1">
-                                            <i class="mdi mdi-eye-outline me-1"></i> View
-                                        </a>
-                                        <a href="/${doc.file}" download class="btn btn-sm btn-primary px-2 py-1">
-                                            <i class="mdi mdi-download-outline me-1"></i> Download
-                                        </a>
-                                    </div>
-                                ` : ''}
+                                                    <div class="mt-2 mb-2 d-flex justify-content-center gap-2" style="position:relative; z-index:10;">
+                                                        <a href="/${doc.file}" target="_blank" class="btn btn-sm btn-outline-primary px-2 py-1">
+                                                            <i class="mdi mdi-eye-outline me-1"></i> View
+                                                        </a>
+                                                        <a href="/${doc.file}" download class="btn btn-sm btn-primary px-2 py-1">
+                                                            <i class="mdi mdi-download-outline me-1"></i> Download
+                                                        </a>
+                                                    </div>
+                                                ` : ''}
                             <input type="hidden" class="edit_old_doc_file" value="${doc.file ?? ''}">
 
                             <input type="file"
@@ -1125,5 +1138,20 @@
             });
 
         });
+    </script>
+    <script>
+        function closeAndRefresh() {
+            // Close the modal manually if needed
+            var modalElement = document.querySelector('.modal.show');
+            if (modalElement) {
+                var modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+            }
+
+            // Refresh the page after a short delay to allow modal to close smoothly
+            setTimeout(function() {
+                location.reload();
+            }, 200); // 200ms delay
+        }
     </script>
 @endsection

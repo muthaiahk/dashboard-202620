@@ -216,12 +216,14 @@
                                 C14,7 12,5 9.5,5Z"/>
                     </svg>
                 </div>
-                <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
-                    <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
-                </a>
-                <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_resources">
-                    <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Resources
-                </a>
+                @if (auth()->user()->hasPermission('Manage Resources', 'is_create'))
+                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
+                        <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
+                    </a>
+                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_resources">
+                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Resources
+                    </a>
+                @endif
             </div>
         </div>
     </div>

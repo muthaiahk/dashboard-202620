@@ -51,4 +51,52 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->role && $this->role->name === 'Admin';
+    }
+
+    public function hasPermission($module, $action)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if (!$this->role) {
+            return false;
+        }
+
+        $permission = $this->role->permissions()->where('module', $module)->first();
+
+        if (!$permission) {
+            return false;
+        }
+
+        return (bool) ($permission->pivot->$action ?? false);
+    }
+
+    public function hasAnyPermission($module)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if (!$this->role) {
+            return false;
+        }
+
+        $permission = $this->role->permissions()->where('module', $module)->first();
+
+        if (!$permission) {
+            return false;
+        }
+
+        $pivot = $permission->pivot;
+        return (bool) (($pivot->is_create ?? false) ||
+               ($pivot->is_read ?? false) ||
+               ($pivot->is_update ?? false) ||
+               ($pivot->is_delete ?? false) ||
+               ($pivot->is_approve ?? false));
+    }
 }

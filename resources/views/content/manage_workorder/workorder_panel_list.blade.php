@@ -25,7 +25,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/forms_date_time_pickers.js'])
+@vite(['resources/assets/js/forms_date_time_pickers.js', 'resources/js/app.js'])
 @endsection
 @section('content')
 
@@ -219,6 +219,21 @@
     .wizard-step.active .wizard-label{
         color: #0076b6;
         font-weight: 500;
+    }
+
+    .wizard-step.completed .wizard-icon {
+        border-color: #28a745;
+        background-color: #28a745;
+        color: white;
+    }
+
+    .wizard-step.completed .wizard-label {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .wizard-line.completed {
+        background-color: #28a745;
     }
 
     .wizard-label{
@@ -453,12 +468,14 @@
                         Calendar
                     </a>
                 </div>
-                <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
-                    <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
-                </a>
-                <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_workorder">
-                    <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Work Order
-                </a>
+                @if (auth()->user()->hasPermission('Manage Work Order', 'is_create'))
+                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
+                        <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
+                    </a>
+                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_workorder">
+                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Work Order
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -524,11 +541,13 @@
                                             <i class="mdi mdi-eye fs-3 text-black"></i>
                                         </span>
                                     </a>
-                                    <a href="#" class="btn btn-icon btn-sm me-2 delete_work_order" data-id="{{ $order->id }}">
-                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                            <i class="mdi mdi-trash-can-outline fs-3 text-danger"></i>
-                                        </span>
-                                    </a>
+                                    @if (auth()->user()->hasPermission('Manage Work Order', 'is_delete'))
+                                        <a href="#" class="btn btn-icon btn-sm me-2 delete_work_order" data-id="{{ $order->id }}">
+                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                                <i class="mdi mdi-trash-can-outline fs-3 text-danger"></i>
+                                            </span>
+                                        </a>
+                                    @endif
                                 </span>
                             </td>
                         </tr>
@@ -600,7 +619,9 @@
                                 <i class="mdi mdi-check text-success"></i>
                                 Active
                             </label>
-                            <a href="javscript:;" type="button" class="btn btn-sm btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_update_workorder"><i class="mdi mdi-pencil-outline me-1"></i>Edit</a>
+                            @if (auth()->user()->hasPermission('Manage Work Order', 'is_update'))
+                                <a href="javscript:;" type="button" class="btn btn-sm btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_update_workorder"><i class="mdi mdi-pencil-outline me-1"></i>Edit</a>
+                            @endif
                             <a href="javscript:;" type="button" class="btn btn-sm btn-primary-outline border border-primary text-primary" data-bs-toggle="offcanvas" data-bs-target="#workorder_history_tab"><i class="mdi mdi-history me-1"></i>History</a>
                         </div>
                     </div>
@@ -689,12 +710,14 @@
                                         </div>
                                         <div class="col-lg-6 mb-3">
                                             <label class="text-black mb-1 fs-7 fw-semibold">Permit Transferred By</label>
-                                            <select class="form-select select3 assign_team" name="permit_transferred_by">
+                                            <select class="form-select select3" name="permit_transferred_by">
                                                 <option value="">Select Staff</option>
-                                                <option value="1">Michael Brown</option>
-                                                <option value="2">Mike</option>
-                                                <option value="3">Alice Wrench</option>
-                                                <option value="4">Sarah Connor</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{ $user->id }}" 
+                                                        {{ old('permit_transferred_by', $workOrder->permit_transferred_by ?? '') == $user->id ? 'selected' : '' }}>
+                                                        {{ $user->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="col-lg-6 mb-3">
@@ -709,57 +732,13 @@
                                             <label class="text-black mb-1 fs-7 fw-semibold">Assign Team<span class="text-danger">*</span></label>
                                             <select class="form-select select3 assign_team" name="assign_team">
                                                 <option value="">Select Team</option>
-                                                <option value="1">Team A</option>
-                                                <option value="2">Team B</option>
-                                                <option value="3">Team C</option>
-                                                <option value="4">Team D</option>
+                                                @foreach($teams as $team)
+                                                    <option value="{{ $team->id }}">{{ $team->team_name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-lg-12 mb-3 d-none team_details">
-                                            <div class="row  bg-white rounded p-2 border">
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Supervisor</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">John Smith <span class="text-danger">(Expired)</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Driver</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">Andrew Thomas</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Technician</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">Iqbaul <span class="text-danger">(Expired)</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Technician</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">Fazil</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Technician</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">Lawrence</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 mb-2">
-                                                    <div class="row">
-                                                        <label class="col-5 fw-medium text-black fs-7">Rigger</label>
-                                                        <label class="col-1 fw-medium text-black fs-7">:</label>
-                                                        <label class="col-6 fw-semibold text-black fs-7">Tom</label>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-12 mb-3 d-none team_details" id="team_details_container">
+                                            <!-- Dynamic team members rendered here -->
                                         </div>
                                         <div class="col-lg-12 mb-3">
                                             <div class="modern-dropzone">
@@ -1009,43 +988,8 @@
                                     <div class="mt-2">
                                         <label class="text-dark mb-2 fs-6">Assigned Tools</label>
                                         <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="card border rounded p-4 mb-2">
-                                                    <div class="d-flex align-items-center justify-content-start gap-2">
-                                                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" checked/>
-                                                        <div class="d-flex flex-column">
-                                                            <label class="fw-medium text-black fs-7">50T Mobile Crane</label>
-                                                            <label class="fw-medium text-dark fs-7">CR-SD-220-X</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card border rounded p-4 mb-2">
-                                                    <div class="d-flex align-items-center justify-content-start gap-2">
-                                                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" checked/>
-                                                        <div class="d-flex flex-column">
-                                                            <label class="fw-medium text-black fs-7">Hydraulic Torque Wrench Kit</label>
-                                                            <label class="fw-medium text-dark fs-7">HTW-004-A</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card border rounded p-4 mb-2">
-                                                    <div class="d-flex align-items-center justify-content-start gap-2">
-                                                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" checked/>
-                                                        <div class="d-flex flex-column">
-                                                            <label class="fw-medium text-black fs-7">Grinding Machine</label>
-                                                            <label class="fw-medium text-dark fs-7">GM-154-S</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card border rounded p-4 mb-2">
-                                                    <div class="d-flex align-items-center justify-content-start gap-2">
-                                                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" checked/>
-                                                        <div class="d-flex flex-column">
-                                                            <label class="fw-medium text-black fs-7">Valve Testing Bench</label>
-                                                            <label class="fw-medium text-dark fs-7">VTB-097-A</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="col-lg-12" id="dynamic_assigned_tools">
+                                                <!-- Dynamic tools rendered here -->
                                             </div>
                                         </div>
                                     </div>
@@ -1060,58 +1004,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_ptw_approved"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">PTW (Permit To Work) Approved & Signed</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_gate_pass_valid"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">Gate Pass & Access Control Valid</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_weather_verified"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">Weathers Conditions Verified (No High Wind/Rain)</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_equipment_readiness"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">Equipment & Lifting Gear Readiness Verified</label>
-                                                        <label>
-                                                            <span class="fw-medium bg-label-info badge fs-7">Required: Lifting Gear</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_team_certs_valid"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">Team Certifications & Competency Valid</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card border rounded p-4 mb-2">
-                                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                                    <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_loto_applied"/>
-                                                    <div class="d-flex flex-column">
-                                                        <label class="fw-medium text-black fs-7">LOTO (Log Out /Tag Out) Applied</label>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-12" id="dynamic_pre_checklist">
+                                            <!-- Dynamic pre-checklist rendered here -->
                                         </div>
                                         <div class="col-lg-12 mb-2">
                                             <div class="d-flex align-items-center justify-content-between gap-5 mb-2">
@@ -1180,138 +1074,11 @@
                                         </div>
                                         <hr class="my-1">
                                         <div class="detail-spec">
-                                            <span class="text-dark fw-bold fs-6">5. Procedure</span>
+                                            <span class="text-dark fw-bold fs-6">5. Procedure Checklist</span>
                                         </div>
-                                        <div class="detail-spec">
-                                            <span class="text-dark fw-semibold fs-6">5.1 Pre-Repair Inspection</span>
+                                        <div id="dynamic_procedure_checklist">
+                                            <!-- Dynamic Procedure steps rendered here -->
                                         </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_verify"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Verify valve type, size, and identification tag.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_check"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Check prior maintenance records for recurring issues.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_inspect"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Visually inspect for leaks, corrosion, cracks, and physical damage.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_proc_pre_document"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Document the condition with photos and notes.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <span class="text-dark fw-semibold fs-6">5.2 Valve Isolation & Preparation</span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_isolate"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Isolate the valve from the process line.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_depressurize"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Depressurize and drain any residual fluid.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_clean"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Clean the valve exterior to prevent contamination during repair.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_iso_prepare"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Prepare tools, spare parts, and work area.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <span class="text-dark fw-semibold fs-6">5.3 Disassembly</span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_loosen"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Loosen and remove bolts, nuts, and fasteners carefully.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_remove"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Remove valve bonnet, stem, disc, and other components systematically.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_organize"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Keep parts organized and labeled for reassembly.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_dis_inspect"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Inspect components for wear, corrosion, or damage.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <span class="text-dark fw-semibold fs-6">5.4 Component Cleaning & Repair</span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_solvents"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Clean all parts using appropriate solvents.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_grind"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Grind or lap valve seats and discs if required.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_replace"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Replace worn or damaged seals, gaskets, stems, or other components.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_clean_lubricate"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Lubricate moving parts with recommended industrial lubricants.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <span class="text-dark fw-semibold fs-6">5.5 Reassembly</span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_reverse"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Reassemble components in reverse order of disassembly.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_torque"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Apply recommended torque on bolts using a calibrated torque wrench.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
-                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="exec_reassemble_align"/>
-                                            <span class="text-black fw-medium fs-6">
-                                                Ensure proper alignment and sealing of moving parts.
-                                            </span>
-                                        </div>
-                                        <div class="detail-spec">
                                             <span class="text-dark fw-semibold fs-6">5.6 Testing & Quality Check</span>
                                         </div>
                                         <div class="detail-spec">
@@ -1425,19 +1192,23 @@
                                 <div class="col-lg-6">
                                     <label class="text-black mb-1 fs-6 fw-semibold">Final Status<span class="text-danger">*</span></label>
                                     <div class="d-block">
-                                        <button type="button" id="submitWizard" class="btn btn-success btn-sm">Submit / Close</button>
+                                        @if (auth()->user()->hasPermission('Manage Work Order', 'is_update'))
+                                            <button type="button" id="submitWizard" class="btn btn-success btn-sm">Submit / Close</button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between mt-5 bg-white py-5 px-2">
-                            <button class="btn btn-secondary" id="prevStep">
+                            <button type="button" class="btn btn-secondary" id="prevStep">
                                 Previous
                             </button>
-                            <button class="btn btn-primary" id="nextStep">
-                                Next Step
-                                <i class="mdi mdi-arrow-right"></i>
-                            </button>
+                            @if (auth()->user()->hasPermission('Manage Work Order', 'is_update'))
+                                <button type="button" class="btn btn-primary" id="nextStep">
+                                    Next Step
+                                    <i class="mdi mdi-arrow-right"></i>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -1457,7 +1228,7 @@
       <div class="modal-content rounded">
         <!--begin::Modal header-->
         <div class="modal-header d-flex align-items-center justify-content-between pb-0 border-bottom">
-          <h4 class="text-center text-black">Bulk Upload Resouces</h4>
+          <h4 class="text-center text-black">Bulk Upload Work Orders</h4>
           <!--begin::Close-->
           <div class="btn btn-sm btn-icon btn-active-color-primary mb-4" data-bs-dismiss="modal">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1472,22 +1243,21 @@
         <!--begin::Modal body-->
         <div class="modal-body py-5 px-10 px-xl-20">
             <div class="row">
-                <div class="dropzone needsclick">
-                    <div class="dz-message fs-6">
-                        <div class="text-center text-black">
-                            Drop files here or click to upload
-                        </div>
-                    </div>
-                    <div class="fallback"> 
-                        <input type="file" name="attachment[]" multiple class="required-field" /> 
-                    </div>
+                <div class="col-12 mb-5 text-center">
+                    <a href="{{ route('work-order.downloadSample') }}" class="btn btn-sm btn-light-primary">
+                        <i class="mdi mdi-download me-1"></i>Download Sample CSV
+                    </a>
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-bold">Select File (CSV/XLSX)</label>
+                    <input type="file" id="bulk_work_order_file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
                 </div>
             </div>
         </div>
         <div class="modal-footer pt-5">
           <div class="d-flex justify-content-end align-items-center">
             <button type="reset" class="btn btn-secondary me-3" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
+            <button type="button" id="btn_bulk_upload_submit" class="btn btn-primary">Upload</button>
           </div>
         </div>
         <!--end::Modal body-->
@@ -1512,123 +1282,14 @@
         <div class="col-lg-12 mb-3">
             <div class="d-flex align-items-center justify-content-between gap-5 mb-2">
                 <label class="text-black fs-7 fw-semibold">Comments</label>
-                <a href="javascript:;" class="btn btn-sm btn-primary-outline border border-primary text-primary">Add Comments</a>
+                <a href="javascript:;" id="btn_add_comment" class="btn btn-sm btn-primary-outline border border-primary text-primary">Add Comments</a>
             </div>
-            <textarea class="form-control" rows="5" placeholder="Enter Access Issues"></textarea>
+            <textarea id="history_comment_textarea" class="form-control" rows="5" placeholder="Enter Comments"></textarea>
         </div>
         <div class="col-lg-12 mb-3">
             <label class="text-black fs-7 fw-semibold">Timeline</label>
-            <div class="timeline-wrapper scroll-y" style="max-height: 700px;">
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 09:00 AM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Arun Prakash</h6>
-                        <p>Inspection permit created for SRV valve inspection.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 09:20 AM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>David Mathew</h6>
-                        <p>Permit approved for inspection activity.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 10:05 AM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Arun Prakash</h6>
-                        <p>Pre-inspection checklist completed and verified.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 10:40 AM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Sneha Reddy</h6>
-                        <p>Inspection procedure document uploaded for validation.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 11:15 AM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Supervisor - Rajesh Kumar</h6>
-                        <p>Inspection request reviewed and approved.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 01:30 PM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Technician - Manoj Kumar</h6>
-                        <p>Valve inspection execution started.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 02:20 PM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Technician - Manoj Kumar</h6>
-                        <p>Issue identified during inspection and recorded for review.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 03:10 PM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>John Smith</h6>
-                        <p>Comment added: Access to the valve area was restricted due to nearby maintenance work.</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 04:00 PM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Arun Prakash</h6>
-                        <p>Inspection images uploaded (Before, During, After).</p>
-                    </div>
-                </div>
-                <div class="timeline-row">
-                    <div class="timeline-time">12-Mar-2026 04:45 PM</div>
-                    <div class="timeline-center">
-                        <span class="timeline-dot"></span>
-                        <span class="timeline-line"></span>
-                    </div>
-                    <div class="timeline-content">
-                        <h6>Supervisor - Rajesh Kumar</h6>
-                        <p>Inspection completed and work order moved to closure.</p>
-                    </div>
-                </div>
+            <div id="timeline_container" class="timeline-wrapper scroll-y" style="max-height: 700px;">
+                <!-- Dynamic timeline content -->
             </div>
         </div>
     </div>
@@ -2094,98 +1755,161 @@
 </div>
 <!--end::Modal - Update Work Order-->
 <script>
+window.wizardCurrentStep = 0;
+window.wizardMaxStep = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
-
-    let currentStep = 0;
-
     const steps = document.querySelectorAll(".wizard-step");
     const panels = document.querySelectorAll(".wizard-panel");
+    const lines = document.querySelectorAll(".wizard-line");
 
     const nextBtn = document.getElementById("nextStep");
     const prevBtn = document.getElementById("prevStep");
     const radios = document.querySelectorAll('input[name="workflow"]');
+    const submitBtn = document.getElementById("submitWizard");
 
-    function showStep(step) {
+    window.showWizardStep = function(step) {
+        window.wizardCurrentStep = step;
 
-        // Panel switching
         panels.forEach((panel, i) => {
             panel.classList.toggle("active", i === step);
         });
 
         steps.forEach((stepItem, i) => {
             stepItem.classList.toggle("active", i === step);
+            // Mark completed steps
+            if (i < window.wizardMaxStep) {
+                stepItem.classList.add("completed");
+            } else {
+                stepItem.classList.remove("completed");
+            }
         });
 
-        // Previous button
-        prevBtn.style.display = step === 0 ? "none" : "inline-block";
+        // Mark completed lines
+        if(lines) {
+            lines.forEach((line, i) => {
+                if (i < window.wizardMaxStep) {
+                    line.classList.add("completed");
+                } else {
+                    line.classList.remove("completed");
+                }
+            });
+        }
 
-        updateButton(); // 🔥 important
-    }
+        prevBtn.style.display = step === 0 ? "none" : "inline-block";
+        updateButton();
+    };
 
     function updateButton() {
-
         const selectedRadio = document.querySelector('input[name="workflow"]:checked');
         const selected = selectedRadio ? selectedRadio.value : null;
 
-        // LAST STEP
-        if (currentStep === panels.length - 1) {
-
-            if (selected === "2") {
-                nextBtn.innerHTML = 'Move to Calibration <i class="mdi mdi-arrow-right"></i>';
-                nextBtn.classList.remove("btn-primary", "btn-success");
-                nextBtn.classList.add("btn-warning");
-            } else {
-                nextBtn.innerHTML = '<i class="mdi mdi-check"></i> Submit Work Order';
-                nextBtn.classList.remove("btn-primary", "btn-warning");
-                nextBtn.classList.add("btn-success");
-            }
-
+        if (window.wizardCurrentStep === panels.length - 1) {
+            nextBtn.style.display = 'none';
+            if(submitBtn) submitBtn.style.display = 'inline-block';
         } else {
-            // NORMAL STEPS
+            nextBtn.style.display = 'inline-block';
+            if(submitBtn) submitBtn.style.display = 'none';
             nextBtn.innerHTML = 'Next Step <i class="mdi mdi-arrow-right"></i>';
             nextBtn.classList.remove("btn-success", "btn-warning");
             nextBtn.classList.add("btn-primary");
         }
     }
 
-    // NEXT CLICK
-    nextBtn.addEventListener("click", function () {
-
-        if (currentStep === panels.length - 1) {
-
-            const selected = document.querySelector('input[name="workflow"]:checked')?.value;
-
-            if (selected === "2") {
-                alert("Moved to Calibration");
-            } else {
-                alert("Work Order Submitted");
-            }
-
+    function saveWizardStep(stepToSave) {
+        const workOrderId = $('#wizard_work_order_id').val();
+        if(!workOrderId) {
+            if(typeof toastr !== 'undefined') toastr.error('No Work Order selected.');
+            else alert('No Work Order selected.');
             return;
         }
 
-        if (currentStep < panels.length - 1) {
-            currentStep++;
-            showStep(currentStep);
+        let formData = new FormData($('#wizardForm')[0]);
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+        formData.append('step', stepToSave);
+
+        let btnToDisable = (stepToSave === panels.length - 1) ? submitBtn : nextBtn;
+        
+        // Prevent double submission which captures 'Saving...' as originalText
+        if(btnToDisable.disabled || $(btnToDisable).hasClass('saving')) return;
+
+        let originalText = btnToDisable.innerHTML;
+
+        $.ajax({
+            url: "{{ url('manage_work_order/update_wizard') }}/" + workOrderId,
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                btnToDisable.disabled = true;
+                $(btnToDisable).addClass('saving');
+                btnToDisable.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
+            },
+            complete: function() {
+                btnToDisable.disabled = false;
+                $(btnToDisable).removeClass('saving');
+                // Rely on updateButton to set the correct text depending on the new step
+                updateButton(); 
+            },
+            success: function(response) {
+                if(response.success) {
+                    if(typeof toastr !== 'undefined') toastr.success(response.message);
+                    window.wizardMaxStep = parseInt(response.wizard_current_step || 0);
+                    
+                    if (stepToSave === panels.length - 1) {
+                         // Final step submitted
+                         $('#kt_modal_add_wizard').modal('hide');
+                         setTimeout(() => location.reload(), 1500);
+                    } else if (window.wizardCurrentStep < panels.length - 1) {
+                         window.showWizardStep(window.wizardCurrentStep + 1);
+                    } else if (window.wizardMaxStep > window.wizardCurrentStep) {
+                         window.showWizardStep(window.wizardCurrentStep); // refresh CSS
+                    }
+                } else {
+                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error saving step');
+                    else alert(response.message || 'Error saving step');
+                }
+            },
+            error: function() {
+                if(typeof toastr !== 'undefined') toastr.error('Network error occurred.'); else alert('Network error occurred.');
+            }
+        });
+    }
+
+    nextBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        saveWizardStep(window.wizardCurrentStep);
+    });
+
+    if(submitBtn) {
+        submitBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            saveWizardStep(window.wizardCurrentStep);
+        });
+    }
+
+    prevBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (window.wizardCurrentStep > 0) {
+            window.showWizardStep(window.wizardCurrentStep - 1);
         }
     });
 
-    // PREVIOUS CLICK
-    prevBtn.addEventListener("click", function () {
-        if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-        }
-    });
-
-    // RADIO CHANGE
     radios.forEach(radio => {
         radio.addEventListener("change", updateButton);
     });
 
-    // INIT
-    showStep(currentStep);
+    steps.forEach((stepItem, i) => {
+        stepItem.addEventListener("click", function() {
+            if (i <= window.wizardMaxStep) {
+                window.showWizardStep(i);
+            }
+        });
+        stepItem.style.cursor = "pointer";
+    });
 
+    window.showWizardStep(window.wizardCurrentStep);
 });
 </script>
 <script>
@@ -2292,6 +2016,43 @@ $(document).ready(function() {
         }
     });
 
+    const teamsData = @json($teams);
+
+    function renderTeamMembers(teamId) {
+        let container = $('#team_details_container');
+        container.empty().addClass('d-none');
+        if (!teamId) return;
+
+        let team = teamsData.find(t => t.id == teamId);
+        if (!team) return;
+
+        let html = '<div class="row bg-white rounded p-2 border">';
+        
+        if (team.all_members_data && team.all_members_data.length > 0) {
+            team.all_members_data.forEach(function(member) {
+                let statusBadge = (member.status === '0' || member.status === 'Expired') ? '<span class="text-danger">(Expired)</span>' : '';
+                html += `
+                    <div class="col-lg-6 mb-2">
+                        <div class="row">
+                            <label class="col-5 fw-medium text-black fs-7">${member.role}</label>
+                            <label class="col-1 fw-medium text-black fs-7">:</label>
+                            <label class="col-6 fw-semibold text-black fs-7">${member.name} ${statusBadge}</label>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            html += '<div class="col-12 text-muted">No members assigned to this team.</div>';
+        }
+
+        html += '</div>';
+        container.html(html).removeClass('d-none');
+    }
+
+    $(document).on('change', '.assign_team', function() {
+        renderTeamMembers($(this).val());
+    });
+
     // Clear validation errors on input
     $('#addWorkOrderForm, #kt_modal_update_workorder_form').on('input change', 'input, select, textarea', function() {
         $(this).removeClass('is-invalid');
@@ -2376,14 +2137,14 @@ $(document).ready(function() {
                 if(response && response.success) {
                     var data = response.data;
                     // Populate Update Form
-                    $('#update_id').val(data.id);
-                    $('#update_title').val(data.title);
-                    $('#update_description').val(data.description);
-                    $('#update_order_type').val(data.order_type).trigger('change');
-                    $('#update_priority').val(data.priority).trigger('change');
-                    $('#update_company_id').val(data.company_id).trigger('change');
-                    $('#update_asset_id').val(data.asset_id).trigger('change');
-                    $('#update_procedure_id').val(data.procedure_id).trigger('change');
+                    $('#update_work_order_id').val(data.id);
+                    $('#up_title').val(data.title);
+                    $('#up_description').val(data.description);
+                    $('#up_order_type').val(data.order_type).trigger('change');
+                    $('#up_priority').val(data.priority).trigger('change');
+                    $('#up_client_id').val(data.client_id).trigger('change');
+                    $('#up_asset_id').val(data.asset_id).trigger('change');
+                    $('#up_procedure_id').val(data.procedure_id).trigger('change');
                     
                     // Set Date Pickers using Flatpickr API if available
                     if (data.compliance_date && $('#up_compliance_date')[0]._flatpickr) {
@@ -2452,25 +2213,184 @@ $(document).ready(function() {
 
                     // Populate Wizard Form
                     $('#wizardForm')[0].reset();
+                    $('#wizardForm input[type="checkbox"], #wizardForm input[type="radio"]').prop('checked', false);
+                    $('#wizardForm .file-preview-list').empty(); // Clear old uploaded images
                     $('#wizard_work_order_id').val(data.id);
-                    if(data.wizard_data) {
-                        try {
-                            var parsedWizardData = typeof data.wizard_data === 'string' ? JSON.parse(data.wizard_data) : data.wizard_data;
-                            $.each(parsedWizardData, function(key, value) {
-                                var $field = $('#wizardForm [name="'+key+'"]');
-                                if($field.length > 0) {
-                                    if($field.is('input[type="checkbox"]')) {
-                                        if (value === 'on' || value === true || value === 1 || value === '1') {
-                                            $field.prop('checked', true);
-                                        }
-                                    } else if($field.is('input[type="radio"]')) {
-                                        $field.filter('[value="'+value+'"]').prop('checked', true);
-                                    } else {
-                                        $field.val(value).trigger('change');
-                                    }
+                    
+                    window.wizardMaxStep = parseInt(data.wizard_current_step || 0);
+                    
+                    // Helper to populate fields
+                    function populateStepData(obj, mapping = null) {
+                        if(!obj) return;
+                        $.each(obj, function(key, value) {
+                            let fieldName = mapping && mapping[key] ? mapping[key] : key;
+                            let $field = $('#wizardForm [name="' + fieldName + '"]');
+                            if($field.length > 0) {
+                                if($field.is('input[type="checkbox"]')) {
+                                    $field.prop('checked', (value == 1 || value == true));
+                                } else if($field.is('input[type="radio"]')) {
+                                    $field.filter('[value="' + value + '"]').prop('checked', true);
+                                } else {
+                                    $field.val(value).trigger('change');
                                 }
+                            }
+                        });
+                    }
+
+                    // Step 0: Inspection
+                    if(data.inspection) {
+                        populateStepData(data.inspection);
+                        if(data.inspection.assigned_team_id) {
+                            $('#wizardForm [name="assign_team"]').val(data.inspection.assigned_team_id).trigger('change');
+                            renderTeamMembers(data.inspection.assigned_team_id);
+                        }
+                    }
+
+                    // Step 1: Validation
+                    if(data.validation) {
+                        let valMap = {
+                            'tools': 'tbt_100_percent_checked',
+                            'assigned_members': 'assigned_members_checked',
+                            'obstruction_notes': 'obstruction_notes_checked',
+                            'special_tools': 'special_tools_checked',
+                            'access_issues': 'access_issues_checked',
+                            'safety_concerns': 'safety_concerns_checked',
+                            'site_condition_notes': 'site_condition_checked',
+                            'documents_permits': 'documents_permits_checked'
+                        };
+                        populateStepData(data.validation, valMap);
+                    }
+
+                    // Prep Dynamic Views
+                    $('#dynamic_assigned_tools').empty();
+                    if(data.tools && data.tools.length > 0) {
+                        data.tools.forEach(function(tool) {
+                            let toolHtml = `
+                                <div class="card border rounded p-4 mb-2">
+                                    <div class="d-flex align-items-center justify-content-start gap-2">
+                                        <i class="mdi mdi-check-circle text-success fs-4"></i>
+                                        <div class="d-flex flex-column">
+                                            <label class="fw-medium text-black fs-7">${tool.name}</label>
+                                            <label class="fw-medium text-dark fs-7">${tool.tag_number}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            $('#dynamic_assigned_tools').append(toolHtml);
+                        });
+                    } else {
+                        $('#dynamic_assigned_tools').html('<p class="text-muted">No tools assigned.</p>');
+                    }
+
+                    $('#dynamic_pre_checklist').empty();
+                    if(data.procedure && data.procedure.pre_checklist) {
+                        let savedPreChecklist = (data.preparation && data.preparation.pre_checklist) ? data.preparation.pre_checklist : [];
+                        let preChecklistArr = typeof data.procedure.pre_checklist === 'string' ? JSON.parse(data.procedure.pre_checklist) : data.procedure.pre_checklist;
+                        
+                        if(Array.isArray(preChecklistArr)) {
+                            preChecklistArr.forEach(function(item) {
+                                let isChecked = savedPreChecklist.includes(item) ? 'checked' : '';
+                                let itemHtml = `
+                                    <div class="card border rounded p-3 mb-2">
+                                        <div class="d-flex align-items-center justify-content-start gap-2">
+                                            <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="pre_checklist[]" value="${item}" ${isChecked}/>
+                                            <div class="d-flex flex-column">
+                                                <label class="fw-medium text-black fs-7">${item}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#dynamic_pre_checklist').append(itemHtml);
                             });
-                        } catch(e) { console.error('Error parsing wizard data:', e); }
+                        }
+                    } else {
+                        $('#dynamic_pre_checklist').html('<p class="text-muted">No pre-checklist items defined for this procedure.</p>');
+                    }
+
+                    // Step 2: Preparation
+                    if(data.preparation) {
+                        populateStepData(data.preparation);
+                        if(data.preparation.escalate) $('#wizardForm [name="escalate_prep"]').prop('checked', true);
+                        if(data.preparation.tech_notes) $('#wizardForm [name="tech_notes_prep"]').val(data.preparation.tech_notes);
+                    }
+
+                    // Step 3: Approval
+                    if(data.approval) {
+                        populateStepData(data.approval);
+                        if(data.approval.escalate) $('#wizardForm [name="escalate_approval"]').prop('checked', true);
+                        if(data.approval.tech_notes) $('#wizardForm [name="tech_notes_approval"]').val(data.approval.tech_notes);
+                    }
+
+                    // Step 4: Execution
+                    $('#dynamic_procedure_checklist').empty();
+                    if(data.procedure && data.procedure.steps) {
+                        let savedProcedureChecklist = (data.execution && data.execution.procedure_checklist) ? data.execution.procedure_checklist : [];
+                        let execChecklistArr = typeof data.procedure.steps === 'string' ? JSON.parse(data.procedure.steps) : data.procedure.steps;
+                        
+                        if(Array.isArray(execChecklistArr)) {
+                            execChecklistArr.forEach(function(item) {
+                                let isChecked = savedProcedureChecklist.includes(item) ? 'checked' : '';
+                                let itemHtml = `
+                                    <div class="detail-spec">
+                                        <input class="form-check-input rounded w-25px h-25px" type="checkbox" name="procedure_checklist[]" value="${item}" ${isChecked}/>
+                                        <span class="text-black fw-medium fs-6">${item}</span>
+                                    </div>
+                                `;
+                                $('#dynamic_procedure_checklist').append(itemHtml);
+                            });
+                        }
+                    } else {
+                        $('#dynamic_procedure_checklist').html('<p class="text-muted">No execution steps defined for this procedure.</p>');
+                    }
+
+                    if(data.execution) {
+                        populateStepData(data.execution.safety_checklist);
+                        // populateStepData(data.execution.procedure_checklist); // Handled by dynamic renderer above
+                        if(data.execution.remarks) $('#wizardForm [name="exec_remarks"]').val(data.execution.remarks);
+                    }
+
+                    // Step 5: Closure
+                    if(data.closure) {
+                        if(data.closure.workflow_status) {
+                            $('#wizardForm [name="workflow"]').filter('[value="' + data.closure.workflow_status + '"]').prop('checked', true);
+                        }
+
+                        // Render existing images
+                        function renderUploadedImages(dropzoneId, imagesJson) {
+                            let previewList = $('#' + dropzoneId + ' .file-preview-list');
+                            previewList.empty(); // Clear existing
+                            if (!imagesJson) return;
+                            try {
+                                let images = typeof imagesJson === 'string' ? JSON.parse(imagesJson) : imagesJson;
+                                if (Array.isArray(images)) {
+                                    images.forEach(function(imgPath) {
+                                        let fullUrl = "{{ asset('') }}" + imgPath;
+                                        let html = `
+                                            <div class="file-preview-item mt-3 me-3" style="display:inline-block;">
+                                                <div class="img-download-box" style="width:100px; height:100px;">
+                                                    <img src="${fullUrl}" class="doc-img" alt="Preview" style="width:100%; height:100%; object-fit:cover; border-radius:6px; border:1px solid #ccc;">
+                                                    <a href="${fullUrl}" target="_blank" title="Download">
+                                                        <i class="mdi mdi-cloud-download-outline download-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        `;
+                                        previewList.append(html);
+                                    });
+                                }
+                            } catch(e) {
+                                console.error("Error parsing images", e);
+                            }
+                        }
+
+                        renderUploadedImages('beforeDropzone', data.closure.before_image);
+                        renderUploadedImages('duringDropzone', data.closure.during_image);
+                        renderUploadedImages('afterDropzone', data.closure.after_image);
+                    }
+
+                    let startStep = window.wizardMaxStep > 5 ? 5 : window.wizardMaxStep;
+                    if(typeof window.showWizardStep === 'function') {
+                        window.showWizardStep(startStep);
                     }
                 } else if (!response.success) {
                     if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error fetching details.');
@@ -2488,10 +2408,10 @@ $(document).ready(function() {
     });
 
     // Update Work Order
-    $('#kt_modal_update_workorder_form').on('submit', function(e) {
+    $('#updateWorkOrderForm').on('submit', function(e) {
         e.preventDefault();
         $(this).find('.is-invalid').removeClass('is-invalid');
-        var id = $('#update_id').val();
+        var id = $('#update_work_order_id').val();
         var formData = new FormData(this);
         $.ajax({
             url: "{{ url('manage_work_order/update') }}/" + id,
@@ -2516,7 +2436,7 @@ $(document).ready(function() {
                         var errorMsg = '';
                         $.each(response.errors, function(key, value) {
                             errorMsg += value[0] + '<br>';
-                            $('#kt_modal_update_workorder_form [name="'+key+'"]').addClass('is-invalid');
+                            $('#updateWorkOrderForm [name="'+key+'"]').addClass('is-invalid');
                         });
                         if(typeof toastr !== 'undefined') toastr.error(errorMsg, 'Validation Error');
                         else alert('Validation Error:\n' + errorMsg.replace(/<br>/g, '\n'));
@@ -2532,45 +2452,120 @@ $(document).ready(function() {
         });
     });
 
-    // Save Wizard Form
-    $('#submitWizard').on('click', function(e) {
-        e.preventDefault();
-        
-        var workOrderId = $('#wizard_work_order_id').val();
-        if(!workOrderId) {
-            if(typeof toastr !== 'undefined') toastr.error('No Work Order selected for wizard.');
-            else alert('No Work Order selected for wizard.');
+    // The Save Wizard Form block (#submitWizard) has been replaced. Logic is now part of the nextBtn handler in showWizardStep.
+
+    // Bulk Upload Submission
+    $('#btn_bulk_upload_submit').on('click', function() {
+        let fileInput = $('#bulk_work_order_file')[0];
+        if (fileInput.files.length === 0) {
+            if(typeof toastr !== 'undefined') toastr.warning('Please select a file to upload.');
             return;
         }
 
-        var formData = new FormData($('#wizardForm')[0]);
-        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+        let formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('_token', '{{ csrf_token() }}');
 
-        var $btn = $(this);
         $.ajax({
-            url: "{{ url('manage_work_order/update_wizard') }}/" + workOrderId,
+            url: "{{ route('work-order.bulkUpload') }}",
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
             beforeSend: function() {
-                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span> Saving...');
+                $('#btn_bulk_upload_submit').prop('disabled', true).text('Uploading...');
             },
             complete: function() {
-                $btn.prop('disabled', false).html('Submit / Close');
+                $('#btn_bulk_upload_submit').prop('disabled', false).text('Upload');
             },
             success: function(response) {
-                if(response.success) {
-                    if(typeof toastr !== 'undefined') toastr.success(response.message || 'Wizard data saved successfully.');
-                    else alert(response.message || 'Wizard data saved successfully.');
+                if(response.status) {
+                    $('#kt_modal_bulk_upload').modal('hide');
+                    $('#bulk_work_order_file').val('');
+                    if(typeof toastr !== 'undefined') toastr.success(response.message);
+                    // Refresh table if needed
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
                 } else {
-                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error saving wizard data.');
-                    else alert(response.message || 'Error saving wizard data.');
+                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error during upload.');
                 }
             },
             error: function(xhr) {
-                if(typeof toastr !== 'undefined') toastr.error('An error occurred while saving wizard.');
-                else alert('An error occurred while saving wizard.');
+                if(typeof toastr !== 'undefined') toastr.error('An error occurred during upload.');
+            }
+        });
+    });
+
+    // History Offcanvas Logic
+    function renderHistory(workOrderId) {
+        let container = $('#timeline_container');
+        container.html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"></div></div>');
+        
+        $.ajax({
+            url: "{{ url('manage_work_order/history') }}/" + workOrderId,
+            type: "GET",
+            success: function(response) {
+                if(response.success) {
+                    let html = '';
+                    if(response.data.length === 0) {
+                        html = '<p class="text-muted p-3 text-center">No history recorded yet.</p>';
+                    } else {
+                        response.data.forEach(function(item) {
+                            html += `
+                                <div class="timeline-row">
+                                    <div class="timeline-time">${item.time}</div>
+                                    <div class="timeline-center">
+                                        <span class="timeline-dot"></span>
+                                        <span class="timeline-line"></span>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>${item.user_name}</h6>
+                                        <p>${item.action}${item.description ? ': ' + item.description : ''}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+                    container.html(html);
+                }
+            }
+        });
+    }
+
+    // Load history when offcanvas is shown
+    $('#workorder_history_tab').on('show.bs.offcanvas', function() {
+        let workOrderId = $('#wizard_work_order_id').val();
+        if(workOrderId) renderHistory(workOrderId);
+    });
+
+    // Add Comment
+    $('#btn_add_comment').on('click', function() {
+        let workOrderId = $('#wizard_work_order_id').val();
+        let comment = $('#history_comment_textarea').val();
+        if(!comment) {
+            if(typeof toastr !== 'undefined') toastr.warning('Please enter a comment.');
+            return;
+        }
+        
+        $.ajax({
+            url: "{{ url('manage_work_order/add_comment') }}/" + workOrderId,
+            type: "POST",
+            data: { comment: comment },
+            beforeSend: function() {
+                $('#btn_add_comment').prop('disabled', true).text('Saving...');
+            },
+            complete: function() {
+                $('#btn_add_comment').prop('disabled', false).text('Add Comments');
+            },
+            success: function(response) {
+                if(response.success) {
+                    $('#history_comment_textarea').val('');
+                    renderHistory(workOrderId);
+                    if(typeof toastr !== 'undefined') toastr.success(response.message);
+                } else {
+                    if(typeof toastr !== 'undefined') toastr.error(response.message || 'Error adding comment.');
+                }
             }
         });
     });

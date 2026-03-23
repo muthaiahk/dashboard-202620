@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Vite;
+use Spatie\Activitylog\Models\Activity;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,17 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
+    Activity::creating(function ($activity) {
+      if (auth()->check()) {
+        $activity->causer_id = auth()->id();
+      }
+
+      $activity->properties = $activity->properties->merge([
+        'ip' => request()->ip(),
+        'url' => request()->fullUrl(),
+        'user_agent' => request()->userAgent(),
+      ]);
+    });
     Vite::useStyleTagAttributes(function (?string $src, string $url, ?array $chunk, ?array $manifest) {
       if ($src !== null) {
         return [

@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\Http;
 
 class Room extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Room,is_read')->only(['index', 'edit', 'List']);
+        $this->middleware('permission:Room,is_create')->only('add');
+        $this->middleware('permission:Room,is_update')->only(['update', 'status']);
+        $this->middleware('permission:Room,is_delete')->only('delete');
+    }
+
+    public function index()
   {
     $lists = RoomModel::with(['sector','plants'])->where('status', '!=', 2)->orderBy('id', 'desc')->get();
     return view('content.settings.room_settings',['lists'=>$lists]);

@@ -121,8 +121,10 @@
                                     <label class="text-black fw-semibold fs-4 counter-value">01</label>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)">-</button>
-                                    <button class="btn btn-xs  py-1 btn-primary fs-4" onclick="Add(this)">+</button>
+                                    @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                        <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)">-</button>
+                                        <button class="btn btn-xs  py-1 btn-primary fs-4" onclick="Add(this)">+</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -164,8 +166,10 @@
                                     <label class="text-black fw-semibold fs-4 counter-value" >02</label>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)" >-</button>
-                                    <button class="btn btn-xs  py-1 btn-primary fs-4" onclick="Add(this)" >+</button>
+                                    @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                        <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)" >-</button>
+                                        <button class="btn btn-xs  py-1 btn-primary fs-4" onclick="Add(this)" >+</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -207,8 +211,10 @@
                                     <label class="text-black fw-semibold fs-4 counter-value">52</label>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
-                                    <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)" >-</button>
-                                    <button class="btn btn-xs  py-1 btn-primary fs-4"  onclick="Add(this)">+</button>
+                                    @if (auth()->user()->hasPermission('Inventory Management', 'is_update'))
+                                        <button class="btn btn-xs  py-1 btn-outline-secondary fs-4 text-nowrap" onclick="sub(this)" >-</button>
+                                        <button class="btn btn-xs  py-1 btn-primary fs-4"  onclick="Add(this)">+</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>

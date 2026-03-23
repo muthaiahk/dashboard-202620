@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\Http;
 
 class Plant extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Plant,is_read')->only(['index', 'edit', 'List']);
+        $this->middleware('permission:Plant,is_create')->only('add');
+        $this->middleware('permission:Plant,is_update')->only(['update', 'status']);
+        $this->middleware('permission:Plant,is_delete')->only('delete');
+    }
+
+    public function index()
   {
     $lists = PlantModel::with('sector')->where('status', '!=', 2)->orderBy('id', 'desc')->get();
     return view('content.settings.plant_settings',['lists' => $lists]);

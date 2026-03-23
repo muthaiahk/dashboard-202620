@@ -14,7 +14,15 @@ use Illuminate\Support\Facades\Http;
 
 class ManageClient extends Controller
 {
-  public function index()
+    public function __construct()
+    {
+        $this->middleware('permission:Manage Client,is_read')->only(['index', 'Edit']);
+        $this->middleware('permission:Manage Client,is_create')->only('Add');
+        $this->middleware('permission:Manage Client,is_update')->only('Update');
+        $this->middleware('permission:Manage Client,is_delete')->only('delete');
+    }
+
+    public function index()
   {
     $lists = Client::where('status', '!=', 2)
       ->orderBy('id', 'desc')

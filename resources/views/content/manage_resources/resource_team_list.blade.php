@@ -104,9 +104,11 @@
                     <i class="mdi mdi-magnify position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                 </div>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeamModal">
-                    <i class="mdi mdi-plus"></i> Add Team
-                </button>
+                @if (auth()->user()->hasPermission('Manage Resources', 'is_create'))
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeamModal">
+                        <i class="mdi mdi-plus"></i> Add Team
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -136,14 +138,18 @@
                         </div>
 
                         <div class="card-footer d-flex gap-2 justify-content-center">
-                            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 edit-team-btn"
-                                data-id="{{ $team->id }}">
-                                <i class="mdi mdi-pencil"></i> Manage Team
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 delete-team-btn"
-                                data-id="{{ $team->id }}">
-                                <i class="mdi mdi-delete"></i>
-                            </button>
+                            @if (auth()->user()->hasPermission('Manage Resources', 'is_update'))
+                                <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 edit-team-btn"
+                                    data-id="{{ $team->id }}">
+                                    <i class="mdi mdi-pencil"></i> Manage Team
+                                </button>
+                            @endif
+                            @if (auth()->user()->hasPermission('Manage Resources', 'is_delete'))
+                                <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1 delete-team-btn"
+                                    data-id="{{ $team->id }}">
+                                    <i class="mdi mdi-delete"></i>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endforeach

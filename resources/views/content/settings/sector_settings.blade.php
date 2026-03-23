@@ -49,9 +49,11 @@
           <!-- <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary-outline border border-primary text-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_bulk_upload">
             <span class="me-2"><i class="mdi mdi-tray-arrow-up"></i></span>Bulk Upload
           </a> -->
-          <a href="javascript:;" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_sector">
-            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Sector
-          </a>
+          @if (auth()->user()->hasPermission('Sector', 'is_create'))
+            <a href="javascript:;" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_sector">
+              <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Sector
+            </a>
+          @endif
         </div>
       </div>
       <div class="card-body py-0">
@@ -77,7 +79,7 @@
                         </td>
                         <td>
                           <label class="switch switch-square">
-                            <input type="checkbox" class="switch-input" {{ isset($list->status) && $list->status == 0 ? 'checked' : '' }} onchange="statusChange('{{ $list->id }}', this.checked)" />
+                            <input type="checkbox" class="switch-input" {{ isset($list->status) && $list->status == 0 ? 'checked' : '' }} onchange="statusChange('{{ $list->id }}', this.checked)" {{ auth()->user()->hasPermission('Sector', 'is_update') ? '' : 'disabled' }} />
                             <span class="switch-toggle-slider">
                               <span class="switch-on"></span>
                               <span class="switch-off"></span>
@@ -86,16 +88,20 @@
                         </td>
                         <td>
                           <span class="text-end">
-                            <a href="#" class="btn btn-icon btn-sm me-2" data-bs-toggle="modal" onclick="editDataFetch({{ $list->id }})" data-bs-target="#kt_modal_edit_sector">
-                              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                <i class="mdi mdi-pencil-outline fs-3 text-black"></i>
-                              </span>
-                            </a>
-                            <a href="#" class="btn btn-icon btn-sm" onclick="deleteFetch('{{ $list->id }}', '{{ $list->name }}')" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_sector">
-                              <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                <i class="mdi mdi-trash-can-outline fs-3 text-black"></i>
-                              </span>
-                            </a>
+                            @if (auth()->user()->hasPermission('Sector', 'is_update'))
+                                <a href="#" class="btn btn-icon btn-sm me-2" data-bs-toggle="modal" onclick="editDataFetch({{ $list->id }})" data-bs-target="#kt_modal_edit_sector">
+                                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
+                                    <i class="mdi mdi-pencil-outline fs-3 text-black"></i>
+                                </span>
+                                </a>
+                            @endif
+                            @if (auth()->user()->hasPermission('Sector', 'is_delete'))
+                                <a href="#" class="btn btn-icon btn-sm" onclick="deleteFetch('{{ $list->id }}', '{{ $list->name }}')" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_sector">
+                                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+                                    <i class="mdi mdi-trash-can-outline fs-3 text-black"></i>
+                                </span>
+                                </a>
+                            @endif
                           </span>
                         </td>
                       </tr>

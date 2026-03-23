@@ -9,6 +9,13 @@ use App\Models\Asset;
 
 class ManageProcedure extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:Manage Procedure,is_read')->only(['index', 'show']);
+        $this->middleware('permission:Manage Procedure,is_create')->only('store');
+        $this->middleware('permission:Manage Procedure,is_update')->only(['update', 'statusUpdate']);
+    }
+
     public function index()
     {
         $procedures = Procedure::orderBy('id', 'desc')->get();
@@ -103,5 +110,22 @@ class ManageProcedure extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function statusUpdate(Request $request)
+    {
+        $procedure = Procedure::find($request->id);
+
+        if (!$procedure) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $procedure->status = $request->status;
+        $procedure->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $procedure->status
+        ]);
     }
 }

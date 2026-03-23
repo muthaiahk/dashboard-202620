@@ -10,7 +10,7 @@
       "name": "Client Dashboard",
       "icon": "menu-icon tf-icons mdi mdi-home-outline",
       "url": "/client_dashboard",
-      "slug" : "client-dashboard"
+      "slug": "client-dashboard"
     },
     {
       "name": "Manage Work Order",
@@ -34,7 +34,7 @@
       "name": "Tools & Equipments",
       "icon": "menu-icon tf-icons mdi mdi-hammer-wrench",
       "slug": "tool-equipment",
-      "url": "/manage_tools_equipments"          
+      "url": "/manage_tools_equipments"
     },
     {
       "name": "Manage Procedure",
@@ -84,6 +84,11 @@
           "url": "settings/room",
           "name": "Room",
           "slug": "settings-room"
+        },
+        {
+          "url": "settings/work_category",
+          "name": "Work Category",
+          "slug": "settings-work-category"
         }
       ]
     }

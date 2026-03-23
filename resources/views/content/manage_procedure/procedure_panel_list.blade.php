@@ -157,7 +157,7 @@
             /* background:#f8fafc; */
             padding: 16px;
             /* border-radius:8px;
-                                                border:1px solid #e6e6e6; */
+                                                                                                                                                        border:1px solid #e6e6e6; */
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -200,9 +200,11 @@
             </div>
             <div class="card-action-element">
                 <div class="d-flex justify-content-end align-items-center mb-2">
-                    <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" id="add-procedure-btn">
-                        <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Procedure
-                    </a>
+                    @if (auth()->user()->hasPermission('Manage Procedure', 'is_create'))
+                        <a href="javascript:;" class="btn btn-sm fw-bold text-white btn-primary" id="add-procedure-btn">
+                            <span class="me-2"><i class="mdi mdi-plus"></i></span>Add Procedure
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -253,6 +255,7 @@
                     <div id="existing-sop-panel">
                         <div class="detail-header">
                             <div class="detail-desc">
+                                <input type="hidden" id="hiddenpocids" />
                                 <h4 class="py-0 my-0" id="sop_detail_title">-</h4>
                                 <span class="text-dark fw-semibold fs-7" id="sop_detail_description">-</span>
                                 <div class="d-flex align-items-center justify-content-start gap-3">
@@ -267,15 +270,21 @@
                                 <div class="d-flex align-items-center justify-content-end gap-2">
                                     <span class="badge bg-gray-100 text-black fs-7 border border-gray-700 fw-medium"
                                         id="sop_detail_work_category">-</span>
-                                    <a href="javascript:;" type="button"
-                                        class="btn btn-sm btn-primary-outline border border-primary text-primary editProcedureBtn"><i
-                                            class="mdi mdi-pencil-outline"></i>Edit</a>
+                                    @if (auth()->user()->hasPermission('Manage Procedure', 'is_update'))
+                                        <a href="javascript:;" type="button"
+                                            class="btn btn-sm btn-primary-outline border border-primary text-primary editProcedureBtn"><i
+                                                class="mdi mdi-pencil-outline"></i>Edit</a>
+                                    @endif
                                 </div>
-                                <div>
-                                    <label class="badge bg-label-success fw-medium fs-7 border border-success rounded">
-                                        <i class="mdi mdi-check text-success"></i> Active
-                                    </label>
-                                </div>
+                                @if (auth()->user()->hasPermission('Manage Procedure', 'is_update'))
+                                    <div id="statusdivchanges">
+                                        <label
+                                            class="badge bg-label-success fw-medium fs-7 border border-success rounded procedure-status-toggle"
+                                            style="cursor:pointer;">
+                                            <i class="mdi mdi-check text-success"></i> Active
+                                        </label>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="detail-body">
@@ -1068,6 +1077,20 @@
                     success: function(res) {
                         if (res.status && res.data) {
                             let d = res.data;
+                            let statusBadge = $('#statusdivchanges .procedure-status-toggle');
+
+                            if (d.status == 1) {
+                                statusBadge
+                                    .removeClass("bg-label-danger border-danger")
+                                    .addClass("bg-label-success border-success")
+                                    .html('<i class="mdi mdi-check text-success"></i> Active');
+                            } else {
+                                statusBadge
+                                    .removeClass("bg-label-success border-success")
+                                    .addClass("bg-label-danger border-danger")
+                                    .html('<i class="mdi mdi-alpha-x text-danger"></i> Inactive');
+                            }
+                            $('#hiddenpocids').val(currentProcedureId);
                             $('#sop_detail_title').text(d.title || '-');
                             $('#sop_detail_description').text(d.description || '-');
                             $('#sop_detail_asset_type').text(d.asset_type || '-');
@@ -1237,10 +1260,8 @@
                                 saveSopBtn.disabled = false;
                                 saveSopBtn.innerHTML = 'Save SOP';
                                 if (res.status) {
-                                    showToast('success', 'Procedure created successfully!',
-                                        function() {
-                                            location.reload();
-                                        });
+                                    showToast('success', 'Procedure created successfully!');
+                                    location.reload();
                                 } else {
                                     showToast('error', res.message ||
                                         'Failed to create procedure');
@@ -1300,10 +1321,8 @@
                                 updateSopBtn.disabled = false;
                                 updateSopBtn.innerHTML = 'Update SOP';
                                 if (res.status) {
-                                    showToast('success', 'Procedure updated successfully!',
-                                        function() {
-                                            location.reload();
-                                        });
+                                    showToast('success', 'Procedure updated successfully!');
+                                    location.reload();
                                 } else {
                                     showToast('error', res.message ||
                                         'Failed to update procedure');
@@ -1328,6 +1347,58 @@
             if (firstItem) {
                 loadProcedureDetail(firstItem.getAttribute('data-id'));
             }
+
+        });
+
+        $(document).ready(function() {
+
+            $('.procedure-status-toggle').click(function() {
+
+                let badge = $(this);
+                // let id = badge.data('id');
+                let id = $('#hiddenpocids').val();
+
+                let newStatus = badge.hasClass('bg-label-success') ? 0 : 1;
+
+                $.ajax({
+                    url: '/procedure/status-update',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id,
+                        status: newStatus
+                    },
+                    success: function(response) {
+
+                        badge.fadeOut(150, function() {
+
+                            if (newStatus === 1) {
+                                badge
+                                    .removeClass("bg-label-danger border-danger")
+                                    .addClass("bg-label-success border-success")
+                                    .html(
+                                        '<i class="mdi mdi-check text-success"></i> Active'
+                                    );
+                            } else {
+                                badge
+                                    .removeClass("bg-label-success border-success")
+                                    .addClass("bg-label-danger border-danger")
+                                    .html(
+                                        '<i class="mdi mdi-alpha-x text-danger"></i> Inactive'
+                                    );
+                            }
+
+                            badge.fadeIn(150);
+                            toastr.success("Status updated successfully!");
+                        });
+
+                    },
+                    error: function() {
+                        toastr.error("Something went wrong!");
+                    }
+                });
+
+            });
 
         });
     </script>

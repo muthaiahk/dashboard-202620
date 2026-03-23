@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 class ManageInventory extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:Manage Inventory,is_read');
+    }
 
-  public function index()
+    public function index()
   {
     return view('content.manage_inventory.list');
   }

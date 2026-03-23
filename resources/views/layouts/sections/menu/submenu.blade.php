@@ -1,6 +1,22 @@
 <ul class="menu-sub">
   @if (isset($menu))
   @foreach ($menu as $submenu)
+  @php
+    $isVisible = true;
+    if (isset($submenu->submenu)) {
+      $isVisible = false;
+      foreach ($submenu->submenu as $sub) {
+        if (auth()->user()->hasPermission($sub->name, 'is_read')) {
+          $isVisible = true;
+          break;
+        }
+      }
+    } elseif (isset($submenu->name)) {
+      $isVisible = auth()->user()->hasPermission($submenu->name, 'is_read');
+    }
+  @endphp
+
+  @if(!$isVisible) @continue @endif
 
   {{-- active menu method --}}
   @php
